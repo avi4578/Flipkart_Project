@@ -1,0 +1,14 @@
+.bg-light {
+    background-image: url('../public/image.jpg');
+    /* Adjust the path as needed */
+    background-repeat: no-repeat;
+    background-size: cover;
+    /* Adjust as needed */
+    background-position: stretch;
+    /* Adjust as needed */
+    overflow: hidden;
+    width: 100%;
+
+  }
+
+    

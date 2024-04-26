@@ -1,0 +1,222 @@
+.bg-test {
+  /* background-image: url('../public/Signupform.jpg'); */
+  /* Adjust the path as needed */
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  /* Ensure the background covers the entire viewport */
+  height: 100vh;
+  width: 100%;
+  max-height: 100%;
+  max-width: 100%;
+}
+/* Center the sign-up form vertically and horizontally */
+.Signup {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Make the sign-up container responsive */
+.signup-container {
+  border: 1px solid #ccc;
+  padding: 20px;
+  border-radius: 5px;
+  width: 80%; /* Adjust width as needed */
+  max-width: 400px;
+  background-color: #f9f9f9;
+}
+
+.forms {
+  position: relative;
+  height: 550px;
+  position: fixed;
+}
+
+.signup-container {
+  /* max-width: 400px; */
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  width: 300px;
+  border: dashed blue 1px;
+}
+
+.signup-form {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Adjust form group margin for better spacing */
+.form-group {
+  margin-bottom: 20px; /* Increase margin for better spacing */
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+/* Ensure the sign-up button is responsive */
+.signup-button {
+  padding: 10px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.signup-button:hover {
+  background-color: #0056b3;
+}
+
+.error {
+  color: red;
+  margin-top: 5px;
+}
+
+.success {
+  color: green;
+  margin-top: 10px;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999; /* Ensure it's above other elements */
+}
+
+.overlay > .spinner-border {
+  color: #fff; /* White color for spinner */
+}
+
+/* For Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.passwordeyeicon1 {
+  position: absolute;
+  margin-top: 21px;
+  left: 85%;
+}
+
+.passwordclearicon1 {
+  position: absolute;
+  margin-top: 12px;
+  left: 85.2%;
+}
+
+.password-toggle-icon1 {
+  position: absolute;
+  margin-top: 4px;
+  top: 43%;
+  right: 10px;
+  /* Adjusted positioning for better alignment */
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.passwordeyeicon2 {
+  position: absolute;
+  margin-top: 21px;
+  left: 85%;
+}
+
+.passwordclearicon2 {
+  position: absolute;
+  margin-top: 12px;
+  left: 85.2%;
+}
+
+.password-toggle-icon2 {
+  position: absolute;
+  margin-top: 4px;
+  top: 43%;
+  right: 10px;
+  /* Adjusted positioning for better alignment */
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+.formpad{
+  margin-bottom: 5px !important;
+}
+.radiobtn{
+  display: inline-flex;
+ 
+}
+.box1{
+  /* height: 97vh; */
+  margin-top:10px;
+}
+@media screen and (max-width: 1024px) {
+  .box1{
+    /* height: 137vh; */
+    margin-top:10px;
+  }
+}
+
+@media screen and (min-width: 1025px) {
+  .box1{
+    height: 124vh;
+    margin-top:10px;
+  }
+}
+.radiobtn {
+  display: inline-flex; /* Display labels in a row */
+  align-items: center; /* Align items vertically */
+  margin-right: 8px; /* Adjust margin as needed */
+}
+
+.radio1 {
+  margin-right: 5px; /* Adjust margin between radio button and text */
+}
+
+span {
+  margin-left: 3px; /* Adjust margin between radio button and text */
+  margin-bottom: 4px;
+}
+.img1{
+  display: block;
+}
+
+@media screen and (max-width: 480px) {
+  .img1{
+    display: none;
+  }
+}
+
+.dropbuttonhandle{
+  width: 255px;
+  padding:5px;
+  margin-bottom: 15px;
+}
+
+.countrycode{
+  padding: 8px ;
+  width: 255px;
+}
+
+.mobilenumber{
+  padding: 8px ;  
+  width: 98% !important;
+  margin-top: 15px;
+
+}

@@ -1,0 +1,22 @@
+
+https://www.python.org/downloads/release/python-382/
+pip install django
+python -m venv venv
+
+venv\scripts\activate
+
+error:
+loaded because running scripts is disabled on this system. For more information, see about_Execution_Policies at 
+https:/go.microsoft.com/fwlink/?LinkID=135170.
+At line:1 char:1
++ venv\scripts\activate
++ ~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : SecurityError: (:) [], PSSecurityException
+    + FullyQualifiedErrorId : UnauthorizedAccess
+
+solution:Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+venv\scripts\activate
+ pip install django
+django-admin startproject sample_project
+cd sample_project
+ python manage.py startapp sample_app

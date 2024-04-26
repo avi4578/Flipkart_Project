@@ -1,0 +1,656 @@
+    .App {
+      text-align: center;
+    }
+
+    .App-logo {
+      height: 40vmin;
+      pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      .App-logo {
+        animation: App-logo-spin infinite 20s linear;
+      }
+    }
+
+    .App-header {
+      background-color: #282c34;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: calc(10px + 2vmin);
+      color: white;
+    }
+
+    .App-link {
+      color: #61dafb;
+    }
+
+    @keyframes App-logo-spin {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .blank {
+      color: rgb(32, 8, 246);
+    }
+
+    .bg-light {
+      background-image: url('../public/image.jpg');
+      /* Adjust the path as needed */
+      background-repeat: no-repeat;
+      background-size: cover;
+      /* Adjust as needed */
+      background-position: stretch;
+      /* Adjust as needed */
+      overflow: hidden;
+      width: 100%;
+
+    }
+
+    .bg-test {
+      background-image: url('../public/Signupform.jpg');
+      /* Adjust the path as needed */
+      background-repeat: no-repeat;
+      background-size: cover;
+      /* Adjust as needed */
+      background-position: stretch;
+      /* Adjust as needed */
+      overflow: hidden;
+      width: 100%;
+
+    }
+
+
+
+    .container {
+      position: relative;
+
+    }
+
+
+    .wrapper {
+      display: flex;
+      align-content: center;
+      justify-content: space-between;
+      margin: 1em 0;
+    }
+
+    canvas {
+      border: 2px solid crimson;
+      border-radius: 20px;
+      justify-content: center;
+    }
+
+    button#reload-button {
+      font-size: 10px;
+      width: 2.6em;
+      background-color: green;
+      cursor: pointer;
+      border: none;
+      border-radius: 0.4em;
+      color: #ffffff;
+      height: 20px;
+    }
+
+    button#reload-button:hover {
+      background-color: rgb(46, 153, 46);
+    }
+
+    input[type='text'] {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 1rem;
+      width: 25%;
+      border: 2px solid crimson;
+      border-radius: 20px;
+    }
+
+        /* ------------------ clearicon Css Start -----------------------------*/
+
+    .emailclearicon{
+      position: absolute;
+      left:265px;
+      top:81px
+    }
+
+
+    .passwordclearicon{
+      position: absolute;
+      left:265px;
+      top: 13px;
+      left: 85.2%;
+    }
+    
+
+    .passwordeyeicon{
+      position:absolute;
+      top:44%;
+      left: 113%;
+    }
+
+
+
+        /* ------------------ clearicon Css End -----------------------------*/
+
+
+        /* ------------------ chatbot Css Start -----------------------------*/
+
+    .toggle-chatbot-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 10px 20px;
+      background-color:red;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      z-index: 9999; /* Ensure it's above other elements */
+    }
+
+    .kKwruy{
+position: relative;
+left: 13vw;    
+}
+
+    .toggle-chatbot-btn:hover {
+      background-color: #0056b3;
+    }
+    
+            /* ------------------ chatbot Css End -----------------------------*/
+
+
+    
+
+    .sidebar {
+      width: 250px;
+      /* Set initial width */
+      height: 100vh;
+      /* Full height */
+      position: fixed;
+      top: 0;
+      left: -250px;
+      /* Initially hidden */
+      background-color: #333;
+      transition: left 0.3s ease;
+    }
+
+    .sidebar.open {
+      left: 0;
+      /* Show when open */
+    }
+
+    .toggle-btn {
+      display: block;
+      background: none;
+      border: none;
+      color: white;
+      padding: 10px;
+      cursor: pointer;
+    }
+
+    /* Example media query for responsiveness */
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 200px;
+        /* Adjust width for smaller screens */
+        left: -200px;
+        /* Initially hidden for smaller screens */
+      }
+
+      .sidebar.open {
+        left: 0;
+        /* Show when open for smaller screens */
+      }
+    }
+
+    .fullscreen-container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    
+
+
+
+    /* ------------------Add fade-in animation to form inputs -----------------------------*/
+
+
+    @keyframes slideIn {
+      from {
+        transform: translateY(-100%);
+      }
+
+      to {
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    /* Animation for login button bounce 
+    @keyframes bounce {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0); }
+    }
+    
+    .button-bounce {
+      animation: bounce 0.5s infinite;
+    }
+    
+ */
+
+
+
+    .form-container {
+      animation: slideIn 0.5s ease forwards;
+      /* Apply slide-in animation */
+    }
+
+    .form-group {
+      animation: fadeIn 0.5s ease forwards;
+      animation: bounce;
+      animation-delay: 0.3s;
+      /* Delay the animation */
+    }
+
+    /* ------------------Add fade-in animation to form inputs -----------------------------*/
+
+
+    /* ------------------ Page Css Start -----------------------------*/
+
+    .login-container {
+      width: 400px;
+      /* Adjust width as needed */
+      background-color: #f4f4f4;
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    
+    .form-container {
+      margin-top: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .error {
+      color: red;
+    }
+
+    .password-input {
+      padding-right: 0.2rem;
+      position: relative;
+    }
+
+    .password-input input {
+      padding-right: 40px;
+      /* Increased padding to provide more space */
+      width: calc(100% - 40px);
+      /* Adjusted width to accommodate increased padding */
+    }
+
+    .password-toggle-icon {
+      position: absolute;
+      top: 43%;
+      right: 10px;
+      /* Adjusted positioning for better alignment */
+      transform: translateY(-50%);
+      cursor: pointer;
+    }
+
+    /* ------------------ Forget Password Css Start -----------------------------*/
+
+    .popup-box {
+      position: fixed;
+      background: #00000050;
+      width: 100%;
+      height: 100vh;
+      top: 0;
+      left: 0;
+    }
+
+    .box {
+      position: relative;
+      width: 30%;
+      margin: 0 auto;
+      height: auto;
+      max-height: 70vh;
+      margin-top: calc(100vh - 80vh - 20px);
+      background: #fff;
+      border-radius: 4px;
+      padding: 30px;
+      border: 1px solid #999;
+      overflow: auto;
+      text-align: center;
+    }
+
+    .close-icon {
+      content: 'x';
+      cursor: pointer;
+      position: fixed;
+      right: calc(35% - 10px);
+      top: calc(100vh - 80vh - 30px);
+      background: #ededed;
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      line-height: 20px;
+      text-align: center;
+      border: 1px solid #999;
+      font-size: 20px;
+    }
+
+    /* ------------------ Forget Password Css End -----------------------------*/
+
+
+
+    .Signup {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .signup-container {
+      border: 1px solid #ccc;
+      padding: 20px;
+      border-radius: 5px;
+      width: 300px;
+    }
+
+    input {
+      margin-bottom: 10px;
+      width: calc(100% - 22px);
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 10px 20px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .login-success {
+      text-align: center;
+    }
+
+    .logintitle {
+      text-align: center;
+    }
+
+    .width {
+      width: 90%;
+    }
+
+    .btns {
+      position: absolute;
+      bottom: 5%;
+      left: 35%;
+    }
+
+
+
+
+
+    /* ------------------Login Page Css End -----------------------------*/
+
+
+    /* ------------------signup Page Css Start -----------------------------*/
+
+
+    .forms {
+
+      position: relative;
+      height: 550px;
+      position: fixed;
+    }
+
+
+    .signup-container {
+      max-width: 400px;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background-color: #f9f9f9;
+      
+    }
+
+    .signup-form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="number"]
+     {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+    }
+
+    .signup-button {
+      padding: 10px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    .signup-button:hover {
+      background-color: #0056b3;
+    }
+
+    .error {
+      color: red;
+      margin-top: 5px;
+    }
+
+    .success {
+      color: green;
+      margin-top: 10px;
+    }
+
+
+    /* .p{
+      margin-top: 17rem;
+    } */
+
+    
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 999; /* Ensure it's above other elements */
+    }
+    
+    .overlay > .spinner-border {
+      color: #fff; /* White color for spinner */
+    }
+    
+    /* For Firefox */
+
+ 
+/* For Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+    
+.passwordeyeicon1{
+  position:absolute;
+  margin-top: 21px;
+  left: 85%;
+}
+
+.passwordclearicon1{
+  position: absolute;
+  margin-top: 12px;
+  left: 85.2%;
+
+  
+}
+
+.password-toggle-icon1 {
+  position: absolute;
+  margin-top: 4px;
+  top: 43%;
+  right: 10px;
+  /* Adjusted positioning for better alignment */
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+    
+.passwordeyeicon2{
+  position:absolute;
+  margin-top: 21px;
+  left: 85%;
+}
+
+.passwordclearicon2{
+  position: absolute;
+  margin-top: 12px;
+  left: 85.3%
+  
+}
+
+.password-toggle-icon2 {
+  position: absolute;
+  margin-top: 4px;
+  top: 43%;
+  right: 10px;
+  /* Adjusted positioning for better alignment */
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+    /* ------------------signup Page Css end -----------------------------*/
+
+
+    /* ------------------responsive-video-player Page Css Start -----------------------------*/
+
+
+    .responsive-video-player {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 135px;
+      height: 1050px;
+      border-width: 20rem;
+    }
+
+    .search-box {
+      margin-bottom: 20px;
+    }
+
+    .video-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      grid-gap: 20px;
+    }
+
+    .responsive-video-player {
+      background-size: cover;
+      background-position: center;
+      min-height: 100vh;
+      padding: 120px;
+    }
+
+    .search-error {
+      color: red;
+      font-size: 18px;
+      margin-top: 10px;
+    }
+
+
+    /* ------------------responsive-video-player Page Css End -----------------------------*/
+
+        /* ------------------Form Css Start -----------------------------*/
+
+
+        .form-container {
+          width: 80%;
+          margin: 0 auto;
+      }
+      
+      .form-header {
+          text-align: center;
+          margin-bottom: 20px;
+      }
+      
+      .form-row {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-between;
+      }
+      
+      .form-col {
+          flex: 0 0 30%; /* Adjust width as needed */
+          margin-bottom: 20px;
+      }
+      
+      
+      .form-button-container {
+          text-align: center;
+          margin-top: 20px;
+      }
+      
+
+      .table-responsive{
+        width: 100% !important;
+      }
+  
+
+        /* ------------------Form Css End -----------------------------*/
+
+        
+
+
+
+
+
+        
