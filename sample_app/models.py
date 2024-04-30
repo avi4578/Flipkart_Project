@@ -2,6 +2,12 @@ from django.db import models
 
 # Create your models here.
 
+choice_for_status=(
+    ('1','Active'),
+    ('0','Inactive'),
+)
+
+
 GENDER_CHOICES = [
         ('M', 'Male'),
         ('F', 'Female'),
@@ -44,4 +50,42 @@ class Document(models.Model):
         db_table='document'
 
     
-        
+class Men(models.Model):
+    Id=models.IntegerField(primary_key=True)
+    mensproduct=models.CharField(max_length=500,blank=True,null=True)
+    status=models.CharField(max_length=20,choices=choice_for_status,blank=True,null=True,default='1')
+
+    class Meta:
+        db_table='men'
+
+class kids(models.Model):
+    Id=models.IntegerField(primary_key=True)
+    kidsproduct=models.CharField(max_length=500,blank=True,null=True)
+    status=models.CharField(max_length=20,choices=choice_for_status,blank=True,null=True,default='1')
+
+    class Meta:
+        db_table='kids'
+
+class Women(models.Model):
+    Id=models.IntegerField(primary_key=True)
+    womensproduct=models.CharField(max_length=500,blank=True,null=True)
+    status=models.CharField(max_length=20,choices=choice_for_status,blank=True,null=True,default='1')
+
+    class Meta:
+        db_table='womens'
+
+class Products(models.Model):
+    Id=models.IntegerField(primary_key=True)
+    product=models.CharField(max_length=500,blank=True,null=True)
+    status=models.CharField(max_length=20,choices=choice_for_status,blank=True,null=True,default='1')
+    image=models.FileField(max_length=500,blank=True,null=True)
+    description=models.CharField(max_length=1000,blank=True,null=True)
+    product=models.CharField(max_length=500,blank=True,null=True)
+    title=models.CharField(max_length=200,blank=True,null=True)
+    category=models.CharField(max_length=20,blank=True,null=True)
+    price=models.CharField(max_length=20,blank=True,null=True)
+    quantity=models.IntegerField(blank=True,null=True)
+    lastupdated=models.DateTimeField(blank=True,null=True)
+
+    class Meta:
+        db_table='products'

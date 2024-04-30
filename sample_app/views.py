@@ -1,7 +1,7 @@
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
-from .models import Usermaster, Document  # Import Document model
+from .models import *  # Import Document model
 from django.core.mail import send_mail
 from django.core.paginator import Paginator
 import smtplib
@@ -349,3 +349,109 @@ def delete_document(request, id):  # id from URL parameter
         'message': message
     }
     return JsonResponse(response)
+
+def get_product(request):
+
+    product = list(Products.objects.all().values('product').order_by('-Id'))  # Fetch all documents
+    # paginator = Paginator(Products, 10)  # 10 documents per page
+
+    # page_number = request.GET.get('page')
+    # page_obj = paginator.get_page(page_number)
+
+    # data = list(page_obj.object_list.values())  # Convert queryset to list
+
+    response = {
+        'status': True,
+        'data': product,
+        # 'current_page': page_obj.number,
+        # 'total_pages': paginator.num_pages,
+    }
+
+    return JsonResponse(response)
+
+def get_product_with_id(request,id):
+    try:
+        if request.method == "GET":
+            response = {}
+            
+            get_product = Products.objects.filter(Id=id).values().first()
+            print("get_product====>", get_product)
+            
+            if get_product:
+                response['status'] = True
+                response['status_code'] = 200
+                response['data'] = get_product
+            else:
+                response['status'] = False
+                response['status_code'] = 404
+                response['message'] = 'Product not found'
+            
+            return JsonResponse(response)
+        else:
+            print("this is else clause")
+        
+    except Exception as e:
+        print(e)
+        response = {'status': False, 'message': 'Something went wrong'}
+        return JsonResponse(response)        
+
+
+def get_mens_product(request):
+    try:
+        if request.method == "GET":
+            response = {}
+            get_men_products = Men.objects.all().values()
+
+            print("get_men_products====>", get_men_products)
+            response['status'] = True
+            response['status_code'] = 200
+            response['data'] = list(get_men_products)
+
+            return JsonResponse(response)
+        else:
+            print("this is else clause")
+        
+    except Exception as e:
+        print(e)
+        response = {'status': False, 'message': 'Something went wrong'}
+        return JsonResponse(response)
+        
+def get_kids_product(request):
+    try:
+        if request.method == "GET":
+            response = {}
+            get_kids_products = kids.objects.all().values()
+
+            print("get_kids_products====>", get_kids_products)
+            response['status'] = True
+            response['status_code'] = 200
+            response['data'] = list(get_kids_products)
+
+            return JsonResponse(response)
+        else:
+            print("this is else clause")
+        
+    except Exception as e:
+        print(e)
+        response = {'status': False, 'message': 'Something went wrong'}
+        return JsonResponse(response)
+    
+def get_womens_product(request):
+    try:
+        if request.method == "GET":
+            response = {}
+            get_women_products = Women.objects.all().values()
+
+            print("get_women_products====>", get_women_products)
+            response['status'] = True
+            response['status_code'] = 200
+            response['data'] = list(get_women_products)
+
+            return JsonResponse(response)
+        else:
+            print("this is else clause")
+        
+    except Exception as e:
+        print(e)
+        response = {'status': False, 'message': 'Something went wrong'}
+        return JsonResponse(response)
