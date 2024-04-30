@@ -11,25 +11,35 @@ import { FaSearch, FaTimes } from 'react-icons/fa'; // Import the icons
 import { toggleMode } from './callexternalfunction';
 
 
-function ResponsiveExample() {
-    const titles = ["SR No", "Title", "Document Type", "ContactMobile", "Department", "View", "Edit", "Delete"];
+function EcommerceCurdoperationinform() {
+    const titles = ["SR No", "title", "image ", "description", "product", "category", "price", "quantity", "status", "lastupdated", "View", "Edit", "Delete"];
     const [mode, setMode] = useState("light");
     const [alert, setAlert] = useState(null);
     const [documents, setDocuments] = useState([]);
     const [title, setTitle] = useState('');
     const [showAddModal, setShowAddModal] = useState(false);
-    const [documentType, setDocumentType] = useState('');
-    const [ContactMobile, setContactMobile] = useState('');
+    const [product, setproduct] = useState('');
+    const [description, setdescription] = useState('');
     const [error, setError] = useState({});
-    const [Email, setEmail] = useState('');
-    const [department, setDepartment] = useState('');
+    const [category, setcategory] = useState('');
+    const [price, setprice] = useState('');
     const [loading, setLoading] = useState(false);
+    const [quantity, setquantity] = useState('');
+    const [status, setstatus] = useState('');
+    const [image, setimage] = useState('');
+    const [size, setsize] = useState('');
+
     const [editedDocument, setEditedDocument] = useState({
         Id: '',
         Title: '',
-        UploadDocumentType: '',
-        ContactMobile: '',
-        Department: ''
+        image: '',
+        description: '',
+        product: '',
+        category: '',
+        price: '',
+        quantity: '',
+        status: '',
+        size: ''
     });
 
     const [selectedId, setSelectedId] = useState(null);
@@ -95,17 +105,22 @@ function ResponsiveExample() {
         event.preventDefault();
         setLoading(true);
 
-        // Validate mobile number length
-        if (ContactMobile.length !== 10) {
-            setError({ ...error, ContactMobile: 'Mobile number should be 10 digits' });
-            return;
-        }
+        // // Validate mobile number length
+        // if (ContactMobile.length !== 10) {
+        //     setError({ ...error, ContactMobile: 'Mobile number should be 10 digits' });
+        //     return;
+        // }
 
         const payload = {
             title: title,
-            documentType: documentType,
-            ContactMobile: ContactMobile,
-            department: department
+            image: image,
+            description: description,
+            product: product,
+            quantity: quantity,
+            price: price,
+            category: category,
+            status: status,
+            size: size
         };
 
         const formData = new FormData();
@@ -132,12 +147,37 @@ function ResponsiveExample() {
 
         // Clear form fields
         setTitle("");
-        setContactMobile("");
-        setDepartment("");
-        setDocumentType("");
+        setimage("");
+        setdescription("");
+        setproduct("");
+        setstatus("");
+        setcategory("");
+        setprice("");
+        setquantity("");
+        setsize("");
     };
 
+    const handleImageUpload = (e) => {
+        const file = e.target.files[0];
 
+        // Check file size
+        if (file.size > 10 * 1024 * 1024) { // 10 MB in bytes
+            setError("File size exceeds 10MB limit.");
+            return;
+        }
+
+        // Check file type
+        const allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
+        if (!allowedTypes.includes(file.type)) {
+            setError("Only PNG, JPEG, and JPG file types are allowed.");
+            return;
+        }
+
+        setEditedDocument(prevState => ({
+            ...prevState,
+            image: file,
+        }));
+    };
 
     //----------------------------------------------AddDocument End//------------------------------------
 
@@ -155,12 +195,15 @@ function ResponsiveExample() {
                 setEditedDocument({
                     Id: selectedData["Id"],
                     Title: selectedData["Title"],
-                    image: selectedData["image: "],
+                    image: selectedData["image"],
                     description: selectedData["description"],
-                    product: selectedData["product "],
-                    category: selectedData["category "],
+                    Department: selectedData["Department"],
+                    product: selectedData["product"],
+                    category: selectedData["category"],
                     price: selectedData["price"],
-                    quantity: selectedData["quantity "],
+                    quantity: selectedData["quantity"],
+                    status: selectedData["status"],
+                    size: selectedData["size"]
                 });
                 setShowEditModal(true);
             } else {
@@ -206,7 +249,9 @@ function ResponsiveExample() {
             product: editedDocument.product,
             category: editedDocument.category,
             price: editedDocument.price,
-            quantity : editedDocument.quantity
+            quantity: editedDocument.quantity,
+            status: editedDocument.status,
+            size: editedDocument.size
         };
 
         const formData = new FormData();
@@ -222,11 +267,13 @@ function ResponsiveExample() {
                     Id: '',
                     Title: '',
                     image: '',
-                    description:  '',
+                    description: '',
                     product: '',
+                    category: '',
                     price: '',
                     quantity: '',
-                    
+                    status: '',
+                    size: ''
                 });
 
                 fetchData();
@@ -277,10 +324,14 @@ function ResponsiveExample() {
         setShowAddModal(false);
         setShowEditModal(false);
         setTitle('');
-        setDocumentType('');
-        setContactMobile('');
-        setDepartment('');
-
+        setimage('');
+        setdescription('');
+        setproduct('');
+        setcategory('');
+        setprice('');
+        setquantity('');
+        setstatus('');
+        setsize('');
     };
 
 
@@ -330,8 +381,13 @@ function ResponsiveExample() {
             const response = await axios.get('http://192.168.0.180:8000/search_document', {
                 params: {
                     Title: trimmedQuery,
-                    ContactMobile: trimmedQuery,
-                    Department: trimmedQuery,
+                    description: trimmedQuery,
+                    product: trimmedQuery,
+                    category: trimmedQuery,
+                    price: trimmedQuery,
+                    quantity: trimmedQuery,
+                    status: trimmedQuery,
+                    size: trimmedQuery
                 }
             });
 
@@ -370,10 +426,18 @@ function ResponsiveExample() {
     const handleDeleteConfirm = async () => {
         const payload = {
             Id: editedDocument.Id,
-            title: editedDocument.Title,
-            documentType: editedDocument.UploadDocumentType,
-            ContactMobile: editedDocument.ContactMobile,
-            department: editedDocument.Department
+            Title: editedDocument.Title,
+            description: editedDocument.description,
+            image: editedDocument.image,
+            product: editedDocument.product,
+            category: editedDocument.category,
+            price: editedDocument.price,
+            quantity: editedDocument.quantity,
+            status: editedDocument.status,
+            created_at: editedDocument.created_at,
+            updated_at: editedDocument.updated_at,
+            size: editedDocument.size
+
         };
 
         const formData = new FormData();
@@ -442,14 +506,17 @@ function ResponsiveExample() {
             <Table style={{ backgroundColor: "white" }}>
                 <thead style={{ textAlign: 'center' }}>
                     <th>SR No</th>
-                    <th>ID</th>
                     <th >Title</th>
-                    <th >Upload Document Type</th>
-                    <th >Contact Mobile</th>
-                    <th >Department</th>
+                    <th >image</th>
+                    <th>Description</th>
+                    <th >category</th>
+                    <th >price</th>
+                    <th >quantity</th>
+                    <th>status</th>
+                    <th>size</th>
                     <th >Edit</th>
                     <th >View</th>
-                    <th>Delete</th>
+                    <th >Delete</th>
                 </thead>
                 <tbody style={{ textAlign: 'center' }}>
                     {documents.length === 0 ? (
@@ -460,12 +527,20 @@ function ResponsiveExample() {
                         documents.map((document, index) => (
                             <tr key={document.Id}>
                                 <td>{index + 1}</td>
-                                <td>{document.Id}</td>
                                 <td>{document.Title}</td>
-                                <td>{document.UploadDocumentType}</td>
-                                <td>{document.ContactMobile}</td>
-                                <td>{document.Department}</td>
-                                <td><Button variant="warning" onClick={() => handleEditfetchdata(document.Id)}>Edit</Button></td>
+                                <td>{document.image}</td>
+                                <td>{document.description}</td>
+                                <td>{document.product}</td>
+                                <td>{document.price}</td>
+                                <td>{document.quantity}</td>
+                                <td>{document.status}</td>
+                                <td>{document.size}</td>
+                                {/* <td><Button variant="warning" onClick={() => handleEditfetchdata(document.Id)}>Edit</Button></td> */}
+                                <td>
+                                    <Button variant="warning" onClick={() => handleEditfetchdata(document.Id)}>
+                                        Edit
+                                    </Button>
+                                </td>
                                 <td>
                                     <Button variant="info" onClick={() => handleViewDocument(document.Id)}>
                                         View
@@ -502,50 +577,143 @@ function ResponsiveExample() {
                                 onChange={(e) => setTitle(e.target.value)}
                             />
                         </div>
-                        <div className="form-group ">
+                        <div className="form-group">
                             <input
-                                type="text"
-                                placeholder="Enter documentType"
-                                name="documentType"
-                                value={documentType}
-                                onChange={(e) => setDocumentType(e.target.value)}
+                                type="file"
+                                name="image"
+                                accept=".png,.jpg,.jpeg"
+                                onChange={handleImageUpload}
+                                style={{ width: '99%' }}
+
                             />
+                            {error.handleImageUpload && <div className='error'>{error.handleImageUpload}</div>}
+
                         </div>
+
+
+
                         <div className="form-group ">
                             <input
                                 type="text"
-                                placeholder="Enter ContactMobile"
-                                name="ContactMobile"
-                                value={ContactMobile}
+                                placeholder="Enter description"
+                                name="description"
+                                value={description}
                                 required
                                 maxLength={10}
-                                onChange={(e) => {
-                                    const mobileNumber = e.target.value;
-
-                                    // Validate mobile number length
-                                    if (mobileNumber.length <= 10) {
-                                        setContactMobile(mobileNumber);
-                                        setError({ ...error, ContactMobile: '' }); // Clear previous error
-                                    } else {
-                                        setError({ ...error, ContactMobile: 'Mobile number should be 10 digits' });
-                                    }
-                                }}
+                                onChange={(e) => setdescription(e.target.value)}
                             />
-                            {error.ContactMobile && <p className="error">{error.ContactMobile}</p>}
+                        </div>
+
+
+                        <div className="form-group">
+                            <select
+                                name="product"
+                                value={product}
+                                onChange={(e) => setproduct(e.target.value)}
+                                style={{ width: '99%' }}
+                            >
+                                <option value="">Select Product</option>
+                                <option value="product1">Clothes</option>
+                                <option value="product2">Footwear</option>
+                                <option value="product3">Watches</option>
+                                {/* Add more options as needed */}
+                            </select>
+                        </div>
+
+
+                        <div className="form-group">
+                            <select
+                                name="category"
+                                value={category}
+                                onChange={(e) => setcategory(e.target.value)}
+                                required
+                                style={{ width: '99%' }}
+
+                            >
+                                <option value="">Select Category</option>
+                                <option value="category1">Kids</option>
+                                <option value="category2">Men</option>
+                                <option value="category1">Women</option>
+                                <option value="category2">All</option>
+                                {/* Add more options as needed */}
+                            </select>
                         </div>
 
                         <div className="form-group ">
                             <input
-                                type="text"
-                                placeholder="Enter Department"
-                                name="Department"
-                                value={department}
+                                type="price"
+                                placeholder="Enter price"
+                                name="price"
+                                value={price}
+                                style={{ width: '99%' }}
                                 required
-                                maxLength={25}
-                                onChange={(e) => setDepartment(e.target.value)}
+                                maxLength={10}
+                                onChange={(e) => setdescription(e.target.value)}
                             />
                         </div>
-                        <Button type="submit" variant="primary">Submit</Button>
+
+
+
+                        <div className="form-group">
+                            <select
+                                name="quantity"
+                                value={quantity}
+                                onChange={(e) => setquantity(e.target.value)}
+                                required
+                                style={{ width: '99%' }}
+
+                            >
+                                <option value="">Select Quantity</option>
+                                <option value="quantity1"> 1</option>
+                                <option value="quantity2"> 2</option>
+                                <option value="quantity1"> 3</option>
+                                <option value="quantity2"> 4</option>
+                                <option value="quantity1"> 5</option>
+                                <option value="quantity2"> 6</option>
+                                <option value="quantity1"> 7</option>
+                                <option value="quantity2"> 8</option>
+                                <option value="quantity1"> 9</option>
+                                <option value="quantity2"> 10</option>
+
+                                {/* Add more options as needed */}
+                            </select>
+                        </div>
+
+                        <div className="form-group">
+                            <select
+                                name="status"
+                                value={status}
+                                onChange={(e) => setstatus(e.target.value)}
+                                required
+                                style={{ width: '99%' }}
+
+                            >
+                                <option value="">Select Status</option>
+                                <option value="status1">Active</option>
+                                <option value="status2">InActive</option>
+                                {/* Add more options as needed */}
+                            </select>
+                        </div>
+
+                        <div className="form-group">
+                            <select
+                                name="size"
+                                value={size}
+                                onChange={(e) => setsize(e.target.value)}
+                                required
+                                style={{ width: '99%' }}
+
+                            >
+                                <option value="">Select Size</option>
+                                <option value="size1">S</option>
+                                <option value="size2">M</option>
+                                <option value="size2">L</option>
+                                <option value="size2">XL</option>
+                                <option value="size2">XXL</option>
+                                {/* Add more options as needed */}
+                            </select>
+                        </div>
+                        <Button type="submit" variant="primary" style={{ marginLeft: '34%' }}>Submit</Button>
                     </form>
                 </Modal.Body>
             </Modal>
@@ -572,52 +740,162 @@ function ResponsiveExample() {
                         <div className="form-group">
                             <input
                                 type="text"
-                                placeholder="Enter documentType"
-                                name="UploadDocumentType"
+                                placeholder="Enter Title"
+                                name="Title"
                                 value={editedDocument?.UploadDocumentType || ''}
                                 onChange={handleInputChange}
                             />
                         </div>
                         <div className="form-group">
                             <input
-                                type="text"
-                                placeholder="Enter ContactMobile"
-                                name="ContactMobile"
-                                value={editedDocument?.ContactMobile || ''}
-                                onChange={handleInputChange}
+                                type="file"
+                                name="image"
+                                accept="image/*"
+                                value={editedDocument?.image || ''}
+                                // onChange={(e) => handleImageUpload(e)}
                                 required
+                                style={{ width: '99%' }}
+
                                 maxLength={25}
 
                             />
                         </div>
+
+
                         <div className="form-group">
                             <input
                                 type="text"
-                                placeholder="Enter Department"
-                                name="Department"
-                                value={editedDocument?.Department || ''}
+                                placeholder="Enter description"
+                                name="description"
+                                value={editedDocument?.description || ''}
                                 onChange={handleInputChange}
                                 required
                                 maxLength={25}
                             />
                         </div>
-                        <Button type="submit" variant="primary">Submit</Button>
+
+                        <div className="form-group">
+                            <select
+                                name="product"
+                                value={product}
+                                onChange={(e) => setproduct(e.target.value)}
+                                style={{ width: '99%' }}
+                            >
+                                <option value="">Select Product</option>
+                                <option value="product1">Clothes</option>
+                                <option value="product2">Footwear</option>
+                                <option value="product3">Watches</option>
+                                {/* Add more options as needed */}
+                            </select>
+                        </div>
+
+
+
+
+                        <div className="form-group">
+                            <input
+                                type="text"
+                                placeholder="Enter price"
+                                name="price"
+                                value={editedDocument?.price || ''}
+                                onChange={handleInputChange}
+                                required
+                                style={{ width: '99%' }}
+                                maxLength={25}
+                            />
+                        </div>
+
+
+                        <div className="form-group">
+                            <select
+                                type="text"
+                                placeholder="Select quantity"
+                                name="quantity"
+                                value={editedDocument?.quantity || ''}
+                                onChange={handleInputChange}
+                                required
+                                style={{ width: '99%' }}
+
+                            >
+                                <option value="">Select Quantity</option>
+                                <option value="quantity1"> 1</option>
+                                <option value="quantity2"> 2</option>
+                                <option value="quantity1"> 3</option>
+                                <option value="quantity2"> 4</option>
+                                <option value="quantity1"> 5</option>
+                                <option value="quantity2"> 6</option>
+                                <option value="quantity1"> 7</option>
+                                <option value="quantity2"> 8</option>
+                                <option value="quantity1"> 9</option>
+                                <option value="quantity2"> 10</option>
+
+                                maxLength={25}
+                            </select>
+                        </div>
+                        <div className="form-group">
+                            <select
+                                type="text"
+                                placeholder="Select status"
+                                name="status"
+                                value={editedDocument?.status || ''}
+                                onChange={handleInputChange}
+                                required
+                                style={{ width: '99%' }}
+
+                            >
+                                <option value="">Select Status</option>
+                                <option value="status1">Active</option>
+                                <option value="status2">InActive</option>
+                                maxLength={25}
+                            </select>
+                        </div>
+
+                        <div className="form-group">
+                            <select
+                                placeholder="Select size"
+                                name="size"
+                                value={editedDocument?.size || ''}
+                                onChange={handleInputChange}
+                                style={{ width: '99%' }}
+
+                            >
+                                <option value="">Select Size</option>
+                                <option value="size1">S</option>
+                                <option value="size2">M</option>
+                                <option value="size2">L</option>
+                                <option value="size2">XL</option>
+                                <option value="size2">XXL</option>
+                                required
+                                maxLength={25}
+                            </select>
+                        </div>
+
+                        <Button type="submit" variant="primary" style={{ marginLeft: '34%' }}>Submit</Button>
                     </form>
                 </Modal.Body>
             </Modal>
 
 
             <Modal show={showViewModal} onHide={() => setShowViewModal(false)} size='lg' scrollable>
-                <Modal.Header closeButton>
-                    <Modal.Title>View Document</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <p><strong>Title:</strong> {viewDocument.Title}</p>
-                    <p><strong>Upload Document Type:</strong> {viewDocument.UploadDocumentType}</p>
-                    <p><strong>Contact Mobile:</strong> {viewDocument.ContactMobile}</p>
-                    <p><strong>Department:</strong> {viewDocument.Department}</p>
-                </Modal.Body>
-            </Modal>
+    <Modal.Header closeButton>
+        <Modal.Title>View Document</Modal.Title>
+    </Modal.Header>
+    <Modal.Body>
+        <p><strong>Title:</strong> {viewDocument.Title}</p>
+        <p><strong>Image:</strong></p>
+        {viewDocument.image && (
+            <img src={viewDocument.image} alt="Document Image" style={{ maxWidth: '100%', maxHeight: '400px' }} />
+        )}
+        <p><strong>Description:</strong> {viewDocument.description}</p>
+        <p><strong>Product:</strong> {viewDocument.product}</p>
+        <p><strong>Category:</strong> {viewDocument.category}</p>
+        <p><strong>Price:</strong> {viewDocument.price}</p>
+        <p><strong>Quantity:</strong> {viewDocument.quantity}</p>
+        <p><strong>Status:</strong> {viewDocument.status}</p>
+        <p><strong>Size:</strong> {viewDocument.size}</p>
+    </Modal.Body>
+</Modal>
+
 
 
 
@@ -641,4 +919,4 @@ function ResponsiveExample() {
     );
 }
 
-export default ResponsiveExample;
+export default EcommerceCurdoperationinform;

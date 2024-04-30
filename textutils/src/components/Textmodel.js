@@ -41,7 +41,7 @@ function Textmodel() {
   return (
     <div>
           <Navbar title="TextUtils" mode={mode} toggleMode={toggleMode} />
-      <div className=" mx-0 bg-light" style={{ width: "100vw" }}>
+      <div className=" mx-0 bg-light" style={{ width: "100vw",margintop: "141px"}}>
       <TextForm showAlert={showAlert} heading="Enter the text to Analyze below" mode={mode}/>
       </div>
     </div>

@@ -12,7 +12,9 @@ import MultiCardCarousel from "./components/MultiCardCarousel";
 import Curdoperationinform from "./components/Curdoperationinform";
 import DocumentTable from "./components/DocumentTable";
 import Homepage from "./components/Homepage";
-
+import ProductDetail from "./components/ProductDetail ";
+import EcommerceNavbar from "./components/EcommerceNavbar";
+import EcommerceCurdoperationinform from './components/EcommerceCurdoperationinform';
 
 function Alert({ message, type }) {
   return (
@@ -86,7 +88,11 @@ function App() {
         <Route path="/MultiCardCarousel" element={<MultiCardCarousel />} />
         <Route path="/Curdoperationinform" element={<Curdoperationinform />} />
         <Route path="/Homepage" element={<Homepage />} />
+        <Route path="/ProductDetail" element={<ProductDetail />} />
+        <Route path="/EcommerceNavbar" element={<EcommerceNavbar />} />
+        <Route path="/EcommerceCurdoperationinform" element={<EcommerceCurdoperationinform />} />
 
+        
       </Routes>
 
       {/* Footer or other layout components can be added here */}

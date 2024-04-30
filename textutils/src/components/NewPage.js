@@ -276,6 +276,7 @@ const NewPage = () => {
 
                                 </div>
                                 <div className="form-group formpad">
+                                    <div className='input-group'>
                                     <input
                                         type={showPassword ? "text" : "password"}
                                         placeholder="Enter Your Password"
@@ -296,6 +297,8 @@ const NewPage = () => {
                                         {password && <FontAwesomeIcon icon={faTimes} onClick={() => setPassword('')} />} {/* Clear icon */}
                                     </span>
                                     {error.password && <div className='error'>{error.password}</div>}
+                                    </div>
+                                    
                                 </div>
 
 
@@ -332,7 +335,8 @@ const NewPage = () => {
                                     {error.mobilenumber && <div className='error'>{error.mobilenumber}</div>}
                                 </div>
                                 <div className="form-group formpad">
-                                    <input
+                                <div className='input-group'>
+                                <input
                                         type={isPasswordVisible ? "text" : "password"}
                                         placeholder="Enter Confirm Password"
                                         value={confirmPassword}
@@ -341,17 +345,23 @@ const NewPage = () => {
                                         required
                                     />
                                     <span className='passwordeyeicon2'>
+                                    <div>
                                         <FontAwesomeIcon
                                             icon={isPasswordVisible ? faEyeSlash : faEye}
                                             onClick={togglePasswordVisibility2}
                                             className='password-toggle-icon2'
                                         />
-                                    </span>
-                                    <span className='passwordclearicon2'>
+                                    </div>
+                                    <div>
                                         {confirmPassword && <FontAwesomeIcon icon={faTimes} onClick={() => setConfirmPassword('')} />} {/* Clear icon */}
+                                    </div>
+
                                     </span>
+                                    
                                     {error.confirmPassword && <div className='error'>{error.confirmPassword}</div>}
                                 </div>
+                                    </div>
+                                    
                                 <button type="submit" className="signup-button">Sign Up</button>
                             </form>
                             <p className="login-link">Already have an account? <Link to="/">Login</Link></p>

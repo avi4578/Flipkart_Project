@@ -15,7 +15,7 @@ const Logout = (props) => {
 
     return (
         <div className="d-flex align-items-center justify-content-end" style={{ color: props.mode === 'dark' ? 'white' : '#042743' ,color:'white' }}>
-            <span onClick={logout} className="logout-btn ms-5" style={{ position: 'absolute', left: '75%', top: '25%' }}>
+            <span onClick={logout} className="logout-btn ms-5" style={{ position: 'absolute', left: '69%', top: '36%' }}>
                 <FontAwesomeIcon icon={faSignOutAlt} /> Logout
             </span>
         </div>
