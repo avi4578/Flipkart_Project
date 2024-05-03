@@ -155,12 +155,9 @@ function ResponsiveExample() {
                 setEditedDocument({
                     Id: selectedData["Id"],
                     Title: selectedData["Title"],
-                    image: selectedData["image: "],
-                    description: selectedData["description"],
-                    product: selectedData["product "],
-                    category: selectedData["category "],
-                    price: selectedData["price"],
-                    quantity: selectedData["quantity "],
+                    UploadDocumentType: selectedData["UploadDocumentType"],
+                    ContactMobile: selectedData["ContactMobile"],
+                    Department: selectedData["Department"]
                 });
                 setShowEditModal(true);
             } else {
@@ -200,13 +197,10 @@ function ResponsiveExample() {
 
         const payload = {
             Id: editedDocument.Id,
-            Title: editedDocument.Title,
-            image: editedDocument.image,
-            description: editedDocument.description,
-            product: editedDocument.product,
-            category: editedDocument.category,
-            price: editedDocument.price,
-            quantity : editedDocument.quantity
+            title: editedDocument.Title,
+            documentType: editedDocument.UploadDocumentType,
+            ContactMobile: editedDocument.ContactMobile,
+            department: editedDocument.Department
         };
 
         const formData = new FormData();
@@ -221,12 +215,9 @@ function ResponsiveExample() {
                 setEditedDocument({
                     Id: '',
                     Title: '',
-                    image: '',
-                    description:  '',
-                    product: '',
-                    price: '',
-                    quantity: '',
-                    
+                    UploadDocumentType: '',
+                    ContactMobile: '',
+                    Department: ''
                 });
 
                 fetchData();
@@ -375,13 +366,13 @@ function ResponsiveExample() {
             ContactMobile: editedDocument.ContactMobile,
             department: editedDocument.Department
         };
-
+    
         const formData = new FormData();
         formData.append("data", JSON.stringify(payload));
-
+        
         try {
             const response = await axios.delete(`http://192.168.0.180:8000/delete-document/${deleteId}`, formData);
-
+    
             if (response.data.status) {
                 // Remove the deleted record from the documents state
                 setDocuments(documents.filter(doc => doc.Id !== deleteId));
@@ -395,8 +386,8 @@ function ResponsiveExample() {
             showAlert('Failed to delete record', 'danger');
         }
     };
-
-
+    
+    
 
     const handleCloseDeleteModal = () => {
         setShowDeleteModal(false);

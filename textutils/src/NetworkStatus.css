@@ -1,0 +1,60 @@
+/* NetworkStatus.css */
+@keyframes onlineFadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes offlineSlideIn {
+    from {
+        transform: translateY(-100%);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+
+
+
+
+.online-animation {
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    animation: onlineFadeIn 1s ease-in-out;
+
+}
+
+.image-container {
+    text-align: center;
+}
+
+
+
+.offline-animation {
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    animation: offlineSlideIn 1s ease-in-out;
+}
+
+.image-container {
+    text-align: center;
+}
+
+.pageheader {
+    font-size: 40px;
+    background-color: green;
+    border-style: groove;
+}

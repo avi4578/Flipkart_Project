@@ -28,10 +28,11 @@ function EcommerceCurdoperationinform() {
     const [status, setstatus] = useState('');
     const [image, setimage] = useState('');
     const [size, setsize] = useState('');
+    const [lastupdated, setlastupdated] = useState('');
 
     const [editedDocument, setEditedDocument] = useState({
         Id: '',
-        Title: '',
+        title: '',
         image: '',
         description: '',
         product: '',
@@ -52,15 +53,16 @@ function EcommerceCurdoperationinform() {
 
     const fetchData = async () => {
         try {
-            const response = await axios.get('http://192.168.0.180:8000/fetchdocument');
+            const response = await axios.get('http://192.168.0.180:8000/fetchproductData');
             setDocuments(response.data.data);
+            console.log(response.data.data)
         } catch (error) {
             console.error('Error fetching data:', error);
         }
     };
 
     useEffect(() => {
-        console.log("enter");
+        console.log("Title");
         fetchData(); //for fetching data on edit document
     }, [showAddModal]); //for displaying data when user fill add 
 
@@ -126,7 +128,7 @@ function EcommerceCurdoperationinform() {
         const formData = new FormData();
         formData.append("data", JSON.stringify(payload));
 
-        axios.post('http://192.168.0.180:8000/adddocument', formData)
+        axios.post('http://192.168.0.180:8000/add_products', formData)
             .then(response => {
                 setLoading(false); // Hide spinner
 
@@ -155,6 +157,7 @@ function EcommerceCurdoperationinform() {
         setprice("");
         setquantity("");
         setsize("");
+        setlastupdated("");
     };
 
     const handleImageUpload = (e) => {
@@ -187,23 +190,25 @@ function EcommerceCurdoperationinform() {
 
     const handleEditfetchdata = async (id) => {
         try {
-            const response = await axios.get(`http://192.168.0.180:8000/singlefetchData/${id}`);
+            const response = await axios.get(`http://192.168.0.180:8000/handleEditfetchdata/${id}`);
             debugger;
             if (response.data.status) {
                 const selectedData = response.data.data;
                 console.log("selectedData=>", selectedData)
+                console.log(response.data.data)
+
                 setEditedDocument({
                     Id: selectedData["Id"],
-                    Title: selectedData["Title"],
+                    title: selectedData["title"],
                     image: selectedData["image"],
                     description: selectedData["description"],
-                    Department: selectedData["Department"],
                     product: selectedData["product"],
                     category: selectedData["category"],
                     price: selectedData["price"],
                     quantity: selectedData["quantity"],
                     status: selectedData["status"],
-                    size: selectedData["size"]
+                    size: selectedData["size"],
+                    // lastupdated:selectedData["lastupdated"]
                 });
                 setShowEditModal(true);
             } else {
@@ -234,7 +239,7 @@ function EcommerceCurdoperationinform() {
 
 
         // Validate form fields
-        if (!editedDocument.Id || !editedDocument.Title || !editedDocument.UploadDocumentType || !editedDocument.ContactMobile || !editedDocument.Department) {
+        if (!editedDocument.Id || !editedDocument.Title || !editedDocument.category || !editedDocument.product || !editedDocument.quantity || !editedDocument.price || !editedDocument.status || !editedDocument.size) {
             setLoading(false);
             showAlert("Please fill in all the fields", "danger");
             return;
@@ -251,14 +256,16 @@ function EcommerceCurdoperationinform() {
             price: editedDocument.price,
             quantity: editedDocument.quantity,
             status: editedDocument.status,
-            size: editedDocument.size
+            size: editedDocument.size,
+            lastupdated: editedDocument.lastupdated,
+
         };
 
         const formData = new FormData();
         formData.append("data", JSON.stringify(payload));
 
         try {
-            const response = await axios.post('http://192.168.0.180:8000/editdocument', formData);
+            const response = await axios.post('http://192.168.0.180:8000/edit_products', formData);
             if (response.data.status) {
                 setShowEditModal(false);
                 showAlert(response.data.message, "success");
@@ -273,7 +280,8 @@ function EcommerceCurdoperationinform() {
                     price: '',
                     quantity: '',
                     status: '',
-                    size: ''
+                    size: '',
+                    lastupdated:''
                 });
 
                 fetchData();
@@ -302,7 +310,7 @@ function EcommerceCurdoperationinform() {
     //a function to open the view modal and fetch the data for the selected document:
     const handleViewDocument = async (id) => {
         try {
-            const response = await axios.get(`http://192.168.0.180:8000/singlefetchData/${id}`);
+            const response = await axios.get(`http://192.168.0.180:8000/ViewsinglefetchData/${id}`);
             if (response.data.status) {
                 setViewDocument(response.data.data);
                 setShowViewModal(true);
@@ -344,7 +352,7 @@ function EcommerceCurdoperationinform() {
         if (window.confirm("Are you sure you want to delete all records?")) {
             try {
                 // Delete records from the backend
-                const response = await axios.delete('http://192.168.0.180:8000/delete-all/');
+                const response = await axios.delete('http://192.168.0.180:8000/delete_all_products/');
 
                 if (response.status) {
                     console.log('All records deleted successfully:');
@@ -509,11 +517,14 @@ function EcommerceCurdoperationinform() {
                     <th >Title</th>
                     <th >image</th>
                     <th>Description</th>
-                    <th >category</th>
+                    <th>Product</th>
+                    <th>category</th>
                     <th >price</th>
-                    <th >quantity</th>
-                    <th>status</th>
+                    <th>quantity</th>
                     <th>size</th>
+                    <th>status</th>
+                    
+                    {/* <th>lastupdated</th> */}
                     <th >Edit</th>
                     <th >View</th>
                     <th >Delete</th>
@@ -527,14 +538,17 @@ function EcommerceCurdoperationinform() {
                         documents.map((document, index) => (
                             <tr key={document.Id}>
                                 <td>{index + 1}</td>
-                                <td>{document.Title}</td>
+                                <td>{document.title}</td>
                                 <td>{document.image}</td>
                                 <td>{document.description}</td>
                                 <td>{document.product}</td>
+                                <td>{document.category}</td>
                                 <td>{document.price}</td>
                                 <td>{document.quantity}</td>
-                                <td>{document.status}</td>
                                 <td>{document.size}</td>
+                                <td>{document.status}</td>
+                                {/* <td>{document.lastupdated}</td> */}
+
                                 {/* <td><Button variant="warning" onClick={() => handleEditfetchdata(document.Id)}>Edit</Button></td> */}
                                 <td>
                                     <Button variant="warning" onClick={() => handleEditfetchdata(document.Id)}>
@@ -607,15 +621,14 @@ function EcommerceCurdoperationinform() {
 
                         <div className="form-group">
                             <select
-                                name="product"
                                 value={product}
                                 onChange={(e) => setproduct(e.target.value)}
                                 style={{ width: '99%' }}
                             >
                                 <option value="">Select Product</option>
-                                <option value="product1">Clothes</option>
-                                <option value="product2">Footwear</option>
-                                <option value="product3">Watches</option>
+                                <option value="Clothes">Clothes</option>
+                                <option value="Footwear">Footwear</option>
+                                <option value="Watches">Watches</option>
                                 {/* Add more options as needed */}
                             </select>
                         </div>
@@ -631,24 +644,27 @@ function EcommerceCurdoperationinform() {
 
                             >
                                 <option value="">Select Category</option>
-                                <option value="category1">Kids</option>
-                                <option value="category2">Men</option>
-                                <option value="category1">Women</option>
-                                <option value="category2">All</option>
+                                <option value="Kids">Kids</option>
+                                <option value="Men">Men</option>
+                                <option value="Women">Women</option>
+                                <option value="All">All</option>
                                 {/* Add more options as needed */}
                             </select>
                         </div>
 
+
+
+
                         <div className="form-group ">
                             <input
-                                type="price"
+                                type="number"
                                 placeholder="Enter price"
                                 name="price"
                                 value={price}
                                 style={{ width: '99%' }}
                                 required
                                 maxLength={10}
-                                onChange={(e) => setdescription(e.target.value)}
+                                onChange={(e) => setprice(e.target.value)}
                             />
                         </div>
 
@@ -656,7 +672,7 @@ function EcommerceCurdoperationinform() {
 
                         <div className="form-group">
                             <select
-                                name="quantity"
+                                name="number"
                                 value={quantity}
                                 onChange={(e) => setquantity(e.target.value)}
                                 required
@@ -664,16 +680,16 @@ function EcommerceCurdoperationinform() {
 
                             >
                                 <option value="">Select Quantity</option>
-                                <option value="quantity1"> 1</option>
-                                <option value="quantity2"> 2</option>
-                                <option value="quantity1"> 3</option>
-                                <option value="quantity2"> 4</option>
-                                <option value="quantity1"> 5</option>
-                                <option value="quantity2"> 6</option>
-                                <option value="quantity1"> 7</option>
-                                <option value="quantity2"> 8</option>
-                                <option value="quantity1"> 9</option>
-                                <option value="quantity2"> 10</option>
+                                <option value="1"> 1</option>
+                                <option value="2"> 2</option>
+                                <option value="3"> 3</option>
+                                <option value="4"> 4</option>
+                                <option value="5"> 5</option>
+                                <option value="6"> 6</option>
+                                <option value="7"> 7</option>
+                                <option value="8"> 8</option>
+                                <option value="9"> 9</option>
+                                <option value="10"> 10</option>
 
                                 {/* Add more options as needed */}
                             </select>
@@ -689,8 +705,8 @@ function EcommerceCurdoperationinform() {
 
                             >
                                 <option value="">Select Status</option>
-                                <option value="status1">Active</option>
-                                <option value="status2">InActive</option>
+                                <option value="Active">Active</option>
+                                <option value="Inactive">Inactive</option>
                                 {/* Add more options as needed */}
                             </select>
                         </div>
@@ -705,11 +721,11 @@ function EcommerceCurdoperationinform() {
 
                             >
                                 <option value="">Select Size</option>
-                                <option value="size1">S</option>
-                                <option value="size2">M</option>
-                                <option value="size2">L</option>
-                                <option value="size2">XL</option>
-                                <option value="size2">XXL</option>
+                                <option value="S">S</option>
+                                <option value="M">M</option>
+                                <option value="L">L</option>
+                                <option value="XL">XL</option>
+                                <option value="XXL">XXL</option>
                                 {/* Add more options as needed */}
                             </select>
                         </div>
@@ -731,21 +747,13 @@ function EcommerceCurdoperationinform() {
                                 type="text"
                                 placeholder="Enter title"
                                 name="Title"
-                                value={editedDocument?.Title || ''}
+                                value={editedDocument?.title || ''}
                                 onChange={handleInputChange}
                                 required
                                 maxLength={25}
                             />
                         </div>
-                        <div className="form-group">
-                            <input
-                                type="text"
-                                placeholder="Enter Title"
-                                name="Title"
-                                value={editedDocument?.UploadDocumentType || ''}
-                                onChange={handleInputChange}
-                            />
-                        </div>
+
                         <div className="form-group">
                             <input
                                 type="file"
@@ -761,31 +769,29 @@ function EcommerceCurdoperationinform() {
                             />
                         </div>
 
-
                         <div className="form-group">
                             <input
                                 type="text"
-                                placeholder="Enter description"
-                                name="description"
-                                value={editedDocument?.description || ''}
+                                placeholder="Enter title"
+                                name="Title"
+                                value={editedDocument?.title || ''}
                                 onChange={handleInputChange}
                                 required
                                 maxLength={25}
                             />
                         </div>
 
+
                         <div className="form-group">
                             <select
                                 name="product"
-                                value={product}
-                                onChange={(e) => setproduct(e.target.value)}
+                                value={editedDocument?.product || ''}
                                 style={{ width: '99%' }}
                             >
                                 <option value="">Select Product</option>
-                                <option value="product1">Clothes</option>
-                                <option value="product2">Footwear</option>
-                                <option value="product3">Watches</option>
-                                {/* Add more options as needed */}
+                                <option value="Clothes">Clothes</option>
+                                <option value="Footwear">Footwear</option>
+                                <option value="Watches">Watches</option>
                             </select>
                         </div>
 
@@ -808,30 +814,21 @@ function EcommerceCurdoperationinform() {
 
                         <div className="form-group">
                             <select
-                                type="text"
-                                placeholder="Select quantity"
-                                name="quantity"
+                                name="number"
                                 value={editedDocument?.quantity || ''}
-                                onChange={handleInputChange}
                                 required
                                 style={{ width: '99%' }}
-
                             >
                                 <option value="">Select Quantity</option>
-                                <option value="quantity1"> 1</option>
-                                <option value="quantity2"> 2</option>
-                                <option value="quantity1"> 3</option>
-                                <option value="quantity2"> 4</option>
-                                <option value="quantity1"> 5</option>
-                                <option value="quantity2"> 6</option>
-                                <option value="quantity1"> 7</option>
-                                <option value="quantity2"> 8</option>
-                                <option value="quantity1"> 9</option>
-                                <option value="quantity2"> 10</option>
-
-                                maxLength={25}
+                                {[...Array(10).keys()].map(num => (
+                                    <option key={num + 1} value={num + 1}>{num + 1}</option>
+                                ))}
                             </select>
                         </div>
+
+
+
+
                         <div className="form-group">
                             <select
                                 type="text"
@@ -841,12 +838,10 @@ function EcommerceCurdoperationinform() {
                                 onChange={handleInputChange}
                                 required
                                 style={{ width: '99%' }}
-
                             >
                                 <option value="">Select Status</option>
-                                <option value="status1">Active</option>
-                                <option value="status2">InActive</option>
-                                maxLength={25}
+                                <option value="Active">Active</option>
+                                <option value="Inactive">Inactive</option>
                             </select>
                         </div>
 
@@ -857,16 +852,13 @@ function EcommerceCurdoperationinform() {
                                 value={editedDocument?.size || ''}
                                 onChange={handleInputChange}
                                 style={{ width: '99%' }}
-
                             >
                                 <option value="">Select Size</option>
-                                <option value="size1">S</option>
-                                <option value="size2">M</option>
-                                <option value="size2">L</option>
-                                <option value="size2">XL</option>
-                                <option value="size2">XXL</option>
-                                required
-                                maxLength={25}
+                                <option value="S">S</option>
+                                <option value="M">M</option>
+                                <option value="L">L</option>
+                                <option value="XL">XL</option>
+                                <option value="XXL">XXL</option>
                             </select>
                         </div>
 
@@ -877,24 +869,26 @@ function EcommerceCurdoperationinform() {
 
 
             <Modal show={showViewModal} onHide={() => setShowViewModal(false)} size='lg' scrollable>
-    <Modal.Header closeButton>
-        <Modal.Title>View Document</Modal.Title>
-    </Modal.Header>
-    <Modal.Body>
-        <p><strong>Title:</strong> {viewDocument.Title}</p>
-        <p><strong>Image:</strong></p>
-        {viewDocument.image && (
-            <img src={viewDocument.image} alt="Document Image" style={{ maxWidth: '100%', maxHeight: '400px' }} />
-        )}
-        <p><strong>Description:</strong> {viewDocument.description}</p>
-        <p><strong>Product:</strong> {viewDocument.product}</p>
-        <p><strong>Category:</strong> {viewDocument.category}</p>
-        <p><strong>Price:</strong> {viewDocument.price}</p>
-        <p><strong>Quantity:</strong> {viewDocument.quantity}</p>
-        <p><strong>Status:</strong> {viewDocument.status}</p>
-        <p><strong>Size:</strong> {viewDocument.size}</p>
-    </Modal.Body>
-</Modal>
+                <Modal.Header closeButton>
+                    <Modal.Title>View Document</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <p><strong>title:</strong> {viewDocument.title}</p>
+                    <p><strong>Image:</strong></p>
+                    {viewDocument.image && (
+                        <img src={viewDocument.image} alt="Document Image" style={{ maxWidth: '100%', maxHeight: '400px' }} />
+                    )}
+                    <p><strong>Description:</strong> {viewDocument.description}</p>
+                    <p><strong>Product:</strong> {viewDocument.product}</p>
+                    <p><strong>Category:</strong> {viewDocument.category}</p>
+                    <p><strong>Price:</strong> {viewDocument.price}</p>
+                    <p><strong>Quantity:</strong> {viewDocument.quantity}</p>
+                    <p><strong>Status:</strong> {viewDocument.status}</p>
+                    <p><strong>Size:</strong> {viewDocument.size}</p>
+                    <p><strong>lastupdated:</strong> {viewDocument.lastupdated}</p>
+
+                </Modal.Body>
+            </Modal>
 
 
 

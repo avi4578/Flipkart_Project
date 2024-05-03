@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Spinner from 'react-bootstrap/Spinner';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -8,14 +8,20 @@ import { faInstagram, faFacebook, faGoogle } from '@fortawesome/free-brands-svg-
 import '../signup.css'; // Import the CSS file
 import { countries } from 'countries-list';
 import countryCodes from 'country-codes-list'; // Import country codes
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+// import { apibaseurl } from './Constant';
 
 
 const NewPage = () => {
     const [fullName, setFullName] = useState('');
+    const fullNameInputRef = useRef(null); // Ref for full name input field
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [showPassword, setShowPassword] = useState(false);
+    const [showPassword1, setShowPassword1] = useState(false); // first password field
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [showPassword2, setShowPassword2] = useState(false); // second password field
+    const [showPassword, setShowPassword] = useState(false);
     const [passwordError, setPasswordError] = useState('');
     const [submitted, setSubmitted] = useState(false);
     const navigate = useNavigate();
@@ -24,9 +30,17 @@ const NewPage = () => {
     const [error, setError] = useState({});
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     // State variables for tracking selected gender
-    const [gender, setGender] = useState('');
-    const [country, setCountry] = useState('INDIA'); // Default country is INDIA
-    const [countryCode, setCountryCode] = useState('+91'); // Default country code is +91
+    const [gender, setGender] = useState('male'); // Set default gender to 'male'
+    const [country, setCountry] = useState(''); // Default country is INDIA
+    const [countryCode, setCountryCode] = useState(''); // Default country code is +91
+
+
+    useEffect(() => {
+        // Check if the ref is assigned and the input field exists before focusing
+        if (fullNameInputRef.current) {
+            fullNameInputRef.current.focus();
+        }
+    }, []); // Empty dependency array ensures this effect runs only once after initial render
 
 
     const handleSocialLogin = (provider) => {
@@ -46,10 +60,10 @@ const NewPage = () => {
         }
     };
 
-    // Function to handle changes in selected gender
     const handleGenderChange = (e) => {
         setGender(e.target.value);
     };
+
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
     };
@@ -60,19 +74,8 @@ const NewPage = () => {
 
     const handleChange = (event) => {
         event.target.value.replace(/[^\d]/g, '');
-        setnumber(event.target.value)
+        setnumber(event.target.value);
     };
-
-    // const validation = (event) => {
-    //     console.log(event);
-    //     if (
-    //       (event.which != 8 && event.which != 0 && event.which < 48) ||
-    //       event.which > 57
-    //     ) {
-    //         event.preventDefault();
-    //       setnumber(event.target.value)
-    //     }
-    //   };
 
     const handlePaste = (e) => {
         e.preventDefault(); // Prevent the default paste behavior
@@ -83,36 +86,41 @@ const NewPage = () => {
 
         // Validate if the user has selected a country
         if (!country) {
-            setError({ ...error, country: 'Please select a country' });
+            toast.error('Please select a country');
+            // setError({ ...error, country: 'Please select a country' });
+
             return;
         }
 
         // Validate if the user has selected a country code
         if (!countryCode) {
-            setError({ ...error, countryCode: 'Please select a country code' });
+            toast.error('Please select a country code');
+            // setError({ ...error, countryCode: 'Please select a country code' });
+
             return;
         }
 
         // Validate mobile number length
         if (mobilenumber.length !== 10) {
-            setError({ ...error, mobilenumber: 'Mobile number should be 10 digits' });
+            toast.error('Mobile number should be 10 digits');
+            // setError({ ...error, mobilenumber: 'Mobile number should be 10 digits' });
+
             return;
         }
-
-
-
-
 
         // Validate password
         if (password !== confirmPassword) {
-            setPasswordError('Passwords do not match');
+            toast.error('Passwords do not match');
+            // setPasswordError('Passwords do not match');
+
             return;
         }
+
         // Set loading to true to show spinner
         setLoading(true);
+        toast.success('Signup successful!');
 
         // Create payload
-        console.log('----->mobilenumber' + countryCode + mobilenumber);
         const payload = {
             fullname: fullName,
             email: email,
@@ -120,21 +128,18 @@ const NewPage = () => {
             confirmpassword: confirmPassword,
             mobilenumber: mobilenumber,
             gender: gender,
-            countryCode:countryCode,
-            mobilenumber: mobilenumber // Combine country code and mobile number
-
+            countryCode: countryCode,
+            mobilenumber: mobilenumber,
+            country: country // Combine country code and mobile number
         };
 
         const formData = new FormData();
         formData.append("data", JSON.stringify(payload));
 
-
-
-        //connect backend with django -----------------//
         // Send POST request
-        axios.post('http://192.168.0.180:8000/signup', formData)
+        axios.post(`http://192.168.0.180:8000/signup`, formData)
+        // axios.post(`${apibaseurl}/signup`, formData)
             .then(response => {
-                console.log("res -------->" + response);
                 setLoading(false); // Hide spinner
 
                 if (response.data.status === false) {
@@ -145,11 +150,10 @@ const NewPage = () => {
                     setPassword('');
                     setConfirmPassword('');
                     setnumber('');
+                    setCountry('');
                     setCountryCode('');
                     setGender('');
-                    
                 } else {
-                    console.log(response);
                     setLoading(false);
                     alert(response.data.message);
                     navigate('/');
@@ -239,6 +243,7 @@ const NewPage = () => {
                                         onChange={(e) => setFullName(e.target.value)}
                                         maxLength={25}
                                         required
+                                        autoFocus // Set autofocus here
                                     />
                                 </div>
                                 <div className="form-group formpad">
@@ -277,30 +282,28 @@ const NewPage = () => {
                                 </div>
                                 <div className="form-group formpad">
                                     <div className='input-group'>
-                                    <input
-                                        type={showPassword ? "text" : "password"}
-                                        placeholder="Enter Your Password"
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        onPaste={handlePaste} // Prevent pasting
-                                        maxLength={15}
-                                        required
-                                    />
-                                    <span className='passwordeyeicon1'>
-                                        <FontAwesomeIcon
-                                            icon={showPassword ? faEyeSlash : faEye}
-                                            onClick={togglePasswordVisibility}
-                                            className='password-toggle-icon1'
+                                        <input
+                                            type={showPassword1 ? "text" : "password"}
+                                            placeholder="Enter Your Password"
+                                            value={password}
+                                            onChange={(e) => setPassword(e.target.value)}
+                                            onPaste={handlePaste}
+                                            maxLength={15}
+                                            required
                                         />
-                                    </span>
-                                    <span className='passwordclearicon1'>
-                                        {password && <FontAwesomeIcon icon={faTimes} onClick={() => setPassword('')} />} {/* Clear icon */}
-                                    </span>
-                                    {error.password && <div className='error'>{error.password}</div>}
+                                        <span className='passwordeyeicon1'>
+                                            <FontAwesomeIcon
+                                                icon={showPassword1 ? faEyeSlash : faEye}
+                                                onClick={() => setShowPassword1(!showPassword1)}
+                                                className='password-toggle-icon1'
+                                            />
+                                        </span>
+                                        <span className='passwordclearicon1'>
+                                            {password && <FontAwesomeIcon icon={faTimes} onClick={() => setPassword('')} />}
+                                        </span>
+                                        {error.password && <div className='error'>{error.password}</div>}
                                     </div>
-                                    
                                 </div>
-
 
                                 <div className="form-group formpad">
                                     <div className="country-code-field">
@@ -324,7 +327,7 @@ const NewPage = () => {
                                     <input
                                         className="mobilenumber"
                                         id="inputBox"
-                                        type="text"
+                                        type="number"
                                         placeholder="Enter Valid Mobile Number"
                                         value={mobilenumber}
                                         onChange={handleChange}
@@ -332,38 +335,36 @@ const NewPage = () => {
                                         required
                                         maxLength={10}
                                     />
-                                    {error.mobilenumber && <div className='error'>{error.mobilenumber}</div>}
+                                    {/* {error.mobilenumber && <div className='error'>{error.mobilenumber}</div>} */}
                                 </div>
                                 <div className="form-group formpad">
-                                <div className='input-group'>
-                                <input
-                                        type={isPasswordVisible ? "text" : "password"}
-                                        placeholder="Enter Confirm Password"
-                                        value={confirmPassword}
-                                        maxLength={15}
-                                        onChange={(e) => setConfirmPassword(e.target.value)}
-                                        required
-                                    />
-                                    <span className='passwordeyeicon2'>
-                                    <div>
-                                        <FontAwesomeIcon
-                                            icon={isPasswordVisible ? faEyeSlash : faEye}
-                                            onClick={togglePasswordVisibility2}
-                                            className='password-toggle-icon2'
+                                    <div className='input-group'>
+                                        <input
+                                            type={showPassword2 ? "text" : "password"}
+                                            placeholder="Confirm Password"
+                                            value={confirmPassword}
+                                            onChange={(e) => setConfirmPassword(e.target.value)}
+                                            onPaste={handlePaste}
+                                            maxLength={15}
+                                            required
                                         />
+                                        <span className='passwordeyeicon2'>
+                                            <FontAwesomeIcon
+                                                icon={showPassword2 ? faEyeSlash : faEye}
+                                                onClick={() => setShowPassword2(!showPassword2)}
+                                                className='password-toggle-icon2'
+                                            />
+                                        </span>
+                                        <span className='passwordclearicon2'>
+                                            {confirmPassword && <FontAwesomeIcon icon={faTimes} onClick={() => setConfirmPassword('')} />}
+                                        </span>
                                     </div>
-                                    <div>
-                                        {confirmPassword && <FontAwesomeIcon icon={faTimes} onClick={() => setConfirmPassword('')} />} {/* Clear icon */}
-                                    </div>
-
-                                    </span>
-                                    
-                                    {error.confirmPassword && <div className='error'>{error.confirmPassword}</div>}
                                 </div>
-                                    </div>
-                                    
+
                                 <button type="submit" className="signup-button">Sign Up</button>
                             </form>
+                            <ToastContainer />
+
                             <p className="login-link">Already have an account? <Link to="/">Login</Link></p>
                             {/* Social media login options */}
                             <div className="social-login">

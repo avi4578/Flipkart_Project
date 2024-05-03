@@ -15,7 +15,7 @@ import Homepage from "./components/Homepage";
 import ProductDetail from "./components/ProductDetail ";
 import EcommerceNavbar from "./components/EcommerceNavbar";
 import EcommerceCurdoperationinform from './components/EcommerceCurdoperationinform';
-
+import NetworkStatus from "./components/NetworkStatus";
 function Alert({ message, type }) {
   return (
     <div 
@@ -91,7 +91,7 @@ function App() {
         <Route path="/ProductDetail" element={<ProductDetail />} />
         <Route path="/EcommerceNavbar" element={<EcommerceNavbar />} />
         <Route path="/EcommerceCurdoperationinform" element={<EcommerceCurdoperationinform />} />
-
+        <Route path="/NetworkStatus" element={<NetworkStatus />} />
         
       </Routes>
 

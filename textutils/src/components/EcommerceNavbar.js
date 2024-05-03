@@ -8,11 +8,16 @@ import { CardImg, CardBody, CardTitle, CardText, CardFooter } from 'reactstrap';
 import { Carousel } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { MDBBtn, MDBIcon, MDBInput, MDBFooter, MDBContainer, MDBRow, MDBCol } from 'mdb-react-ui-kit';
+import { TypeAnimation } from 'react-type-animation'; // Import TypeAnimation component as a named import
+import ReactTypeAnimation from 'react-type-animation';
 
 
 
 function EcommerceNavbar() {
     const [menu, setmenu] = useState(null);
+    const [textColor, setTextColor] = useState('red'); // State for text color
+
 
     const ExampleCarouselImage = ({ src, text, height }) => (
         <img
@@ -41,7 +46,7 @@ function EcommerceNavbar() {
         }
     };
 
-    
+
 
     return (
         <>
@@ -102,6 +107,24 @@ function EcommerceNavbar() {
             </Carousel>
 
 
+ {/* Add the title "Men Collection" with dynamic text color */}
+ <h1 className="text-center mt-4 mb-4" style={{ color: textColor }}>
+                <TypeAnimation
+                    sequence={[
+                        'Men Collection',
+                        800,
+                        () => setTextColor('aqua'),
+                        'Men Collection',
+                        800,
+                        () => setTextColor('deeppink'),
+                        'Men Collection',
+                        1000,
+                        () => setTextColor('darkkhaki'),
+                        '',
+                    ]}
+                    repeat={Infinity}
+                />
+            </h1>
 
 
             <Row xs={{ cols: 1 }} md={{ cols: 4 }} className="g-4 mt-2">
@@ -124,7 +147,7 @@ function EcommerceNavbar() {
                             </CardText>
                             {!showDetails && (
                                 <Button variant="outline-dark" color="link" >
-                                    <Link to="/ProductDetail"  className="btn btn-primary">ProductDetail</Link>
+                                    <Link to="/ProductDetail" className="btn btn-primary">ProductDetail</Link>
                                 </Button>
 
                             )}
@@ -221,6 +244,186 @@ function EcommerceNavbar() {
                     </Card>
                 </Col>
             </Row>
+
+            <MDBFooter className='text-center' color='white' bgColor='dark'>
+                <MDBContainer className='p-4'>
+                    <section className='mb-4'>
+                        <MDBBtn outline color="light" floating className='m-1' href='#!' role='button'>
+                            <MDBIcon fab icon='facebook-f' />
+                        </MDBBtn>
+
+                        <MDBBtn outline color="light" floating className='m-1' href='#!' role='button'>
+                            <MDBIcon fab icon='twitter' />
+                        </MDBBtn>
+
+                        <MDBBtn outline color="light" floating className='m-1' href='#!' role='button'>
+                            <MDBIcon fab icon='google' />
+                        </MDBBtn>
+
+                        <MDBBtn outline color="light" floating className='m-1' href='#!' role='button'>
+                            <MDBIcon fab icon='instagram' />
+                        </MDBBtn>
+
+                        <MDBBtn outline color="light" floating className='m-1' href='#!' role='button'>
+                            <MDBIcon fab icon='linkedin-in' />
+                        </MDBBtn>
+
+                        <MDBBtn outline color="light" floating className='m-1' href='#!' role='button'>
+                            <MDBIcon fab icon='github' />
+                        </MDBBtn>
+                    </section>
+
+                    <section className=''>
+                        <form action=''>
+                            <MDBRow className='d-flex justify-content-center'>
+                                <MDBCol size="auto">
+                                    <p className='pt-2'>
+                                        <strong>Sign up for our newsletter</strong>
+                                    </p>
+                                </MDBCol>
+
+                                <MDBCol md='5' start>
+                                    <MDBInput contrast type='email' label='Email address' className='mb-4' />
+                                </MDBCol>
+
+                                <MDBCol size="auto">
+                                    <MDBBtn outline color='light' type='submit' className='mb-4'>
+                                        Subscribe
+                                    </MDBBtn>
+                                </MDBCol>
+                            </MDBRow>
+                        </form>
+                    </section>
+
+                    <section className='mb-4'>
+                        <p>
+                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt distinctio earum repellat quaerat
+                            voluptatibus placeat nam, commodi optio pariatur est quia magnam eum harum corrupti dicta, aliquam
+                            sequi voluptate quas.
+                        </p>
+                    </section>
+
+                    <section className=''>
+                        <MDBRow>
+                            <MDBCol lg='3' md='6' className='mb-4 mb-md-0'>
+                                <h5 className='text-uppercase'>Links</h5>
+
+                                <ul className='list-unstyled mb-0'>
+                                    <li>
+                                        <a href='#!' className='text-white'>
+                                            Link 1
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href='#!' className='text-white'>
+                                            Link 2
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href='#!' className='text-white'>
+                                            Link 3
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href='#!' className='text-white'>
+                                            Link 4
+                                        </a>
+                                    </li>
+                                </ul>
+                            </MDBCol>
+
+                            <MDBCol lg='3' md='6' className='mb-4 mb-md-0'>
+                                <h5 className='text-uppercase'>Links</h5>
+
+                                <ul className='list-unstyled mb-0'>
+                                    <li>
+                                        <a href='#!' className='text-white'>
+                                            Link 1
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href='#!' className='text-white'>
+                                            Link 2
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href='#!' className='text-white'>
+                                            Link 3
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href='#!' className='text-white'>
+                                            Link 4
+                                        </a>
+                                    </li>
+                                </ul>
+                            </MDBCol>
+
+                            <MDBCol lg='3' md='6' className='mb-4 mb-md-0'>
+                                <h5 className='text-uppercase'>Links</h5>
+
+                                <ul className='list-unstyled mb-0'>
+                                    <li>
+                                        <a href='#!' className='text-white'>
+                                            Link 1
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href='#!' className='text-white'>
+                                            Link 2
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href='#!' className='text-white'>
+                                            Link 3
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href='#!' className='text-white'>
+                                            Link 4
+                                        </a>
+                                    </li>
+                                </ul>
+                            </MDBCol>
+
+                            <MDBCol lg='3' md='6' className='mb-4 mb-md-0'>
+                                <h5 className='text-uppercase'>Links</h5>
+
+                                <ul className='list-unstyled mb-0'>
+                                    <li>
+                                        <a href='#!' className='text-white'>
+                                            Link 1
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href='#!' className='text-white'>
+                                            Link 2
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href='#!' className='text-white'>
+                                            Link 3
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href='#!' className='text-white'>
+                                            Link 4
+                                        </a>
+                                    </li>
+                                </ul>
+                            </MDBCol>
+                        </MDBRow>
+                    </section>
+                </MDBContainer>
+
+                <div className='text-center p-3' style={{ backgroundColor: 'rgba(0, 0, 0, 0.2)' }}>
+                    © 2020 Copyright:
+                    <a className='text-white' href='https://mdbootstrap.com/'>
+                        MDBootstrap.com
+                    </a>
+                </div>
+            </MDBFooter>
+
         </>
     )
 }

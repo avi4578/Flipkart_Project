@@ -1,0 +1,18 @@
+/* Navbar.css */
+
+.navbar {
+    /* Define your navbar styles */
+}
+
+/* Example animation for navbar links */
+.navbar-nav li {
+    transition: transform 0.5s ease; /* Add smooth transition */
+    animationName: bounce,
+
+}
+
+.navbar-nav li:hover {
+    transform: scale(1.1); /* Example: Scale up on hover */
+}
+
+/* Define other animations or effects as needed */

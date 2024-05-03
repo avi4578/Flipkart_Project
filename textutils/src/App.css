@@ -547,28 +547,33 @@ input::-webkit-inner-spin-button {
 }
     
 .passwordeyeicon2{
-  position:relative;
-  margin-top: 12px;
-  left: 94.3%;
+  position:absolute;
+  margin-top: 18px;
+  left: 92.2%
 }
-
+ 
 .passwordclearicon2{
   position: absolute;
-  margin-top: 12px;
-  left: 94.3%
+  margin-top:12px;
+  left: 92.2%
   
 }
 
 .password-toggle-icon2 {
   position: absolute;
-  margin-top: 4px;
-  top: 43%;
-  right: 10px;
+  margin-top: 5px;
+  top: 15%;
+  right: 18px;
   /* Adjusted positioning for better alignment */
   transform: translateY(-50%);
   cursor: pointer;
 }
-
+.navbar1{
+  display: flex;
+    justify-content: center;
+    /* padding: 30px; */
+    box-shadow: 0 1px 3px -2px black;
+}
     /* ------------------signup Page Css end -----------------------------*/
 
 
