@@ -7,9 +7,19 @@ from django.core.paginator import Paginator
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+import os
+from django.core.files.storage import FileSystemStorage
 
+cwd = os.getcwd().replace("\\", "/")
+local_directory = cwd+'/media/'
+
+
+ 
 
 # Create your views here.
+
+
+# //---------------signup api start -----------------------------------//
 
 @csrf_exempt
 def signup(request):
@@ -62,6 +72,11 @@ def signup(request):
         return JsonResponse(response)
 
 
+# //---------------signup api end -----------------------------------//
+
+
+# //---------------login api start -----------------------------------//
+
 @csrf_exempt
 def login(request):
     try:
@@ -87,6 +102,10 @@ def login(request):
         response['status_code'] = 404
         return JsonResponse(response)
 
+# //---------------login api end -----------------------------------//
+
+
+# //---------------forget_password api start -----------------------------------//
 
 @csrf_exempt
 def forget_password_send_mail(userName,email_id,code):
@@ -123,6 +142,42 @@ def forget_password_send_mail(userName,email_id,code):
  
     except Exception as e:
         print("Err: ", e)
+
+# //---------------forget_password api end -----------------------------------//
+
+
+@csrf_exempt
+def add_document(request):
+    try:
+        if request.method == 'POST':
+            response = {}
+            data_1=request.POST.get('data')
+            print("data_1====>",data_1)
+            json_data = json.loads(data_1)
+            print("json_data====>",json_data)
+
+            Title = json_data.get('title')
+            UploadDocumentType = json_data.get('documentType')
+            ContactMobile = json_data.get('ContactMobile')
+            Emailid = json_data.get('Email')
+            Department = json_data.get('department')
+
+            document_details = Document.objects.create(
+                Title=Title,
+                UploadDocumentType=UploadDocumentType,
+                ContactMobile=ContactMobile,
+                Emailid=Emailid,
+                Department=Department
+            )
+            print("document_details====>",document_details)
+            response['status'] = True
+            response['message'] = 'Details added successfully'
+            
+            return JsonResponse(response)
+    except Exception as e:
+        print(e)
+        response = {'status': False, 'message': 'Something went wrong'}
+        return JsonResponse(response)
 
 
 
@@ -172,39 +227,6 @@ def singlefetchData(request, id):
         else:
             print("this is else clause")
         
-    except Exception as e:
-        print(e)
-        response = {'status': False, 'message': 'Something went wrong'}
-        return JsonResponse(response)
-
-@csrf_exempt
-def add_document(request):
-    try:
-        if request.method == 'POST':
-            response = {}
-            data_1=request.POST.get('data')
-            print("data_1====>",data_1)
-            json_data = json.loads(data_1)
-            print("json_data====>",json_data)
-
-            Title = json_data.get('title')
-            UploadDocumentType = json_data.get('documentType')
-            ContactMobile = json_data.get('ContactMobile')
-            Emailid = json_data.get('Email')
-            Department = json_data.get('department')
-
-            document_details = Document.objects.create(
-                Title=Title,
-                UploadDocumentType=UploadDocumentType,
-                ContactMobile=ContactMobile,
-                Emailid=Emailid,
-                Department=Department
-            )
-            print("document_details====>",document_details)
-            response['status'] = True
-            response['message'] = 'Details added successfully'
-            
-            return JsonResponse(response)
     except Exception as e:
         print(e)
         response = {'status': False, 'message': 'Something went wrong'}
@@ -455,3 +477,249 @@ def get_womens_product(request):
         print(e)
         response = {'status': False, 'message': 'Something went wrong'}
         return JsonResponse(response)
+
+
+
+# //---------------add_products api start -----------------------------------//
+
+@csrf_exempt
+def add_products(request):
+    try:
+        if request.method == 'POST':
+            response = {}
+            title=request.POST.get('title')
+            description=request.POST.get('description')
+            category=request.POST.get('category')
+            price=request.POST.get('price')
+            quantity=request.POST.get('quantity')
+            status=request.POST.get('status')
+            size=request.POST.get('size')
+            product=request.POST.get('product')
+            image=request.FILES.get('image')
+
+            json_data={"title":title,"description":description,"category":category,"price":price,
+                       "quantity":quantity,"status":status,"size":size,"product":product,"image":image.name}
+
+            if image is not None:
+                UPLOAD_FOLDER = f'{local_directory}documents/doc/'
+                fs = FileSystemStorage(location=UPLOAD_FOLDER)
+                isExist = os.path.exists(UPLOAD_FOLDER)
+                op_name = image.name
+                if not isExist:
+                    os.makedirs(UPLOAD_FOLDER)
+                    file = fs.save(op_name, image)
+                    fileurl = fs.url(file)
+                else:
+                    file = fs.save(op_name,image)
+
+
+                    
+            # data_1=request.POST.get('data')
+            # print("data_1====>",data_1)
+            # json_data = json.loads(data_1)
+            # print("json_data====>",json_data)
+
+            # title = json_data.get('title')
+            # # image = json_data.get('image')
+            # description = json_data.get('description')
+            # category = json_data.get('category')
+            # price = json_data.get('price')
+            # quantity = json_data.get('quantity')
+            # status = json_data.get('status')
+            # size = json_data.get('size')
+            # product=json_data.get('product')
+            # ContactMobile = json_data.get('product')
+
+
+            
+            # if image is not None:
+            #     UPLOAD_FOLDER = f'{local_directory}documents/doc/'
+            #     fs = FileSystemStorage(location=UPLOAD_FOLDER)
+            #     isExist = os.path.exists(UPLOAD_FOLDER)
+            #     op_name = image.name
+            #     if not isExist:
+            #         os.makedirs(UPLOAD_FOLDER)
+            #         file = fs.save(op_name, image)
+            #         fileurl = fs.url(file)
+            #     else:
+            #         file = fs.save(op_name,image)
+
+            product_details = Products.objects.create(
+                title=title,
+                description=description,
+                category=category,
+                price=price,
+                quantity=int(quantity),
+                status=status,
+                size=size,
+                product=product,
+                image=op_name,
+            )
+            # print("product_details====>",product_details)
+            response['status'] = True
+            response['message'] = 'Details added successfully'
+            
+            return JsonResponse(response)
+    except Exception as e:
+        print(e)
+        response = {'status': False, 'message': 'Something went wrong'}
+        return JsonResponse(response)
+    
+# //---------------add_products api end -----------------------------------//
+
+
+# //---------------get all products of add_products api start -----------------------------------//
+
+@csrf_exempt
+def fetchproductData(request):
+
+    try:
+        if request.method == "GET":
+            response = {}
+            get_product = Products.objects.all().values()
+
+            print("get_product====>", get_product)
+            response['status'] = True
+            response['status_code'] = 200
+            response['data'] = list(get_product.order_by('-Id'))
+
+            return JsonResponse(response)
+        else:
+            print("this is else clause")
+        
+    except Exception as e:
+        print(e)
+        response = {'status': False, 'message': 'Something went wrong'}
+        return JsonResponse(response)
+    
+# //---------------get all products of add_products api end -----------------------------------//
+
+# //---------------get edit data of  add_products api start -----------------------------------//
+
+
+@csrf_exempt
+def handleEditfetchdata(request, id):
+    try:
+        if request.method == "GET":
+            response = {}
+            
+            get_doc = Products.objects.filter(Id=id).values().first()
+            print("get_doc====>", get_doc)
+            
+            if get_doc:
+                response['status'] = True
+                response['status_code'] = 200
+                response['data'] = get_doc
+            else:
+                response['status'] = False
+                response['status_code'] = 404
+                response['message'] = 'Document not found'
+            
+            return JsonResponse(response)
+        else:
+            print("this is else clause")
+        
+    except Exception as e:
+        print(e)
+        response = {'status': False, 'message': 'Something went wrong'}
+        return JsonResponse(response)
+
+# //---------------get edit data of  add_products api end -----------------------------------//
+
+
+# //---------------on submit  edit data of products api start -----------------------------------//
+
+@csrf_exempt
+def edit_products(request):
+    try:
+        if request.method == 'POST':
+            response = {}
+            data_1 = request.POST.get('data')
+            print("data_1====>", data_1)
+            json_data = json.loads(data_1)
+            print("json_data====>", json_data)
+
+            document_id = json_data.get('Id')
+            title = json_data.get('title')
+            description = json_data.get('description')
+            category = json_data.get('category')
+            price = json_data.get('price')
+            quantity = json_data.get('quantity')
+            status = json_data.get('status')
+            size = json_data.get('size')
+            image = json_data.get('image')
+            product = json_data.get('product')
+
+            product_entry = Products.objects.filter(Id=document_id)
+            if product_entry.exists():
+                updated_product_entry = product_entry.update(title=title,
+                                                      description=description,
+                                                      category=category,
+                                                      price=price,
+                                                      quantity=int(quantity),
+                                                      status=status,
+                                                      size=size,
+                                                      image=image,
+                                                      product=product,
+                                                      )
+
+                print("updated_product_entry====>", updated_product_entry)
+                response['status'] = True
+                response['message'] = 'Details updated successfully'
+                return JsonResponse(response)
+            else:
+                response['status'] = False
+                response['message'] = 'Details not found'
+                return JsonResponse(response)
+    except Exception as e:
+        print(e)
+        response = {'status': False, 'message': 'Something went wrong'}
+        return JsonResponse(response)
+
+# //---------------on submit  edit data of products api end -----------------------------------//
+@csrf_exempt
+def ViewsinglefetchData(request, id):
+    try:
+        if request.method == "GET":
+            response = {}
+            
+            get_doc = Products.objects.filter(Id=id).values().first()
+            print("get_doc====>", get_doc)
+            
+            if get_doc:
+                response['status'] = True
+                response['status_code'] = 200
+                response['data'] = get_doc
+            else:
+                response['status'] = False
+                response['status_code'] = 404
+                response['message'] = 'Document not found'
+            
+            return JsonResponse(response)
+        else:
+            print("this is else clause")
+        
+    except Exception as e:
+        print(e)
+        response = {'status': False, 'message': 'Something went wrong'}
+        return JsonResponse(response)
+
+@csrf_exempt
+def delete_all_products(request):
+    status = ""
+    try:
+        # Delete all records
+        Products.objects.all().delete()
+        message = "All records deleted successfully."
+        status = True
+    except Exception as e:
+        status = False
+        message = f"Error deleting records: {e}"
+    
+    response = {
+        'status': True,
+        'message': message
+    }
+
+    return JsonResponse(response)
+

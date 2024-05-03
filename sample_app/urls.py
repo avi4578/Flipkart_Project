@@ -19,7 +19,10 @@ urlpatterns=[
     path('get_womens_products',views.get_womens_product),
     path('get_product_with_id/<int:id>',views.get_product_with_id),
     path('get_product',views.get_product),
-
-
+    path('add_products',views.add_products),
+    path('fetchproductData',views.fetchproductData),
+    path('edit_products',views.edit_products),  
+    path('handleEditfetchdata/<int:id>',views.handleEditfetchdata),
+    path('ViewsinglefetchData/<int:id>',views.ViewsinglefetchData),
 
 ] 

@@ -27,16 +27,6 @@ class Usermaster(models.Model):
         managed = True
         db_table = 'usermaster'
 
-# class Usermaster(models.Model):
-#     ID=models.AutoField(primary_key=True)
-#     Fullname=models.CharField(max_length=100,blank=True,null=True)
-#     Email=models.CharField(max_length=100,blank=True,null=True)
-#     Password=models.CharField(max_length=100,blank=True,null=True)
-#     Confirmpassword=models.CharField(max_length=100,blank=True,null=True)
-
-#     class Meta:
-#         db_table='usermaster'
-
 
 class Document(models.Model):
     Id=models.IntegerField(primary_key=True)
@@ -75,17 +65,17 @@ class Women(models.Model):
         db_table='womens'
 
 class Products(models.Model):
-    Id=models.IntegerField(primary_key=True)
-    product=models.CharField(max_length=500,blank=True,null=True)
-    status=models.CharField(max_length=20,choices=choice_for_status,blank=True,null=True,default='1')
-    image=models.FileField(max_length=500,blank=True,null=True)
-    description=models.CharField(max_length=1000,blank=True,null=True)
-    product=models.CharField(max_length=500,blank=True,null=True)
+    Id=models.AutoField(primary_key=True)
     title=models.CharField(max_length=200,blank=True,null=True)
+    product=models.CharField(max_length=200,blank=True,null=True)
+    # image=models.ImageField(blank=True,null=True)
+    description=models.CharField(max_length=1000,blank=True,null=True)
     category=models.CharField(max_length=20,blank=True,null=True)
     price=models.CharField(max_length=20,blank=True,null=True)
     quantity=models.IntegerField(blank=True,null=True)
-    lastupdated=models.DateTimeField(blank=True,null=True)
+    status=models.CharField(max_length=20,choices=choice_for_status,blank=True,null=True,default='1')
+    size=models.CharField(max_length=20,blank=True,null=True)
+    lastupdated=models.DateTimeField(blank=True,null=True,auto_now=True)
 
     class Meta:
         db_table='products'
