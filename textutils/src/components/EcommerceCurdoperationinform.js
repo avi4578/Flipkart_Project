@@ -1,14 +1,18 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import Table from 'react-bootstrap/Table';
 import { Button } from 'react-bootstrap';
 import Modal from 'react-bootstrap/Modal';
-import Form from 'react-bootstrap/Form';
+// import Form from 'react-bootstrap/Form';
 import Navbar from './Navbar';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import '../App.css';
 import axios from 'axios';
 import { FaSearch, FaTimes } from 'react-icons/fa'; // Import the icons
-import { toggleMode } from './callexternalfunction';
+// import { toggleMode } from './callexternalfunction';
+// import { apibaseurl } from './Constant';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from 'react-toastify';
+import ToggleButton from 'react-bootstrap';
 
 
 function EcommerceCurdoperationinform() {
@@ -28,8 +32,9 @@ function EcommerceCurdoperationinform() {
     const [status, setstatus] = useState('');
     const [image, setimage] = useState('');
     const [size, setsize] = useState('');
+    const [colour, setcolour] = useState('');
     const [lastupdated, setlastupdated] = useState('');
-
+    const [imageLoaded, setImageLoaded] = useState(true); // Initialize image loaded state
     const [editedDocument, setEditedDocument] = useState({
         Id: '',
         title: '',
@@ -40,7 +45,8 @@ function EcommerceCurdoperationinform() {
         price: '',
         quantity: '',
         status: '',
-        size: ''
+        size: '',
+        colour: '',
     });
 
     const [selectedId, setSelectedId] = useState(null);
@@ -49,11 +55,17 @@ function EcommerceCurdoperationinform() {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [deleteId, setDeleteId] = useState(null);
 
+    const DocumentProperty = ({ label, value, children }) => (
+        <p>
+            <strong>{label}:</strong> {value || children}
+        </p>
+    );
 
+    const baseurl = "http://192.168.0.210:8000/media/documents/doc/";
 
     const fetchData = async () => {
         try {
-            const response = await axios.get('http://192.168.0.180:8000/fetchproductData');
+            const response = await axios.get(`${'http://192.168.0.210:8000'}/fetchproductDatawithproductid`);
             setDocuments(response.data.data);
             console.log(response.data.data)
         } catch (error) {
@@ -80,7 +92,7 @@ function EcommerceCurdoperationinform() {
     const toggleMode = () => {
         if (mode === "light") {
             setMode("dark");
-            document.body.style.backgroundColor = "white";
+            document.body.style.backgroundcolour = "white";
             showAlert("Dark mode has been enabled", "success");
             document.title = "TextUtils - Dark Mode";
             setInterval(() => {
@@ -91,7 +103,7 @@ function EcommerceCurdoperationinform() {
             }, 1500);
         } else {
             setMode("light");
-            document.body.style.backgroundColor = "white";
+            document.body.style.backgroundcolour = "white";
             showAlert("Light mode has been enabled", "success");
         }
     };
@@ -107,11 +119,81 @@ function EcommerceCurdoperationinform() {
         event.preventDefault();
         setLoading(true);
 
-        // // Validate mobile number length
-        // if (ContactMobile.length !== 10) {
-        //     setError({ ...error, ContactMobile: 'Mobile number should be 10 digits' });
-        //     return;
-        // }
+        if (!title) {
+            toast.error('Please Enter  title');
+            // setError({ ...error, country: 'Please select a country' });
+
+            return;
+        }
+
+
+
+
+
+        if (!description) {
+            toast.error('Please Enter  description');
+            // setError({ ...error, country: 'Please select a country' });
+
+            return;
+        }
+
+        if (!product) {
+            toast.error('Please Select  product');
+            // setError({ ...error, country: 'Please select a country' });
+
+            return;
+        }
+        if (!category) {
+            toast.error('Please Select  category');
+            // setError({ ...error, country: 'Please select a country' });
+
+            return;
+        }
+
+
+        const imageFile = event.target.image.files[0];
+        if (!imageFile) {
+            toast.error('Please Select an image');
+            return;
+        }
+
+        const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+        if (!allowedTypes.includes(imageFile.type)) {
+            toast.error('Only PNG, JPEG, and JPG file types are allowed for the image');
+            return;
+        }
+        if (!quantity) {
+            toast.error('Please Select  quantity');
+            // setError({ ...error, country: 'Please select a country' });
+
+            return;
+        }
+
+
+
+
+
+        if (!status) {
+            toast.error('Please Select status');
+            // setError({ ...error, country: 'Please select a country' });
+
+            return;
+        }
+
+        if (!size) {
+            toast.error('Please Select  size');
+            // setError({ ...error, country: 'Please select a country' });
+
+            return;
+        }
+
+
+        if (!colour) {
+            toast.error('Please Enter  colour');
+            // setError({ ...error, country: 'Please select a country' });
+
+            return;
+        }
 
         const payload = {
             title: title,
@@ -122,15 +204,17 @@ function EcommerceCurdoperationinform() {
             price: price,
             category: category,
             status: status,
-            size: size
+            size: size,
+            colour: colour,
         };
 
         const formData = new FormData();
         formData.append("data", JSON.stringify(payload));
+        formData.append("image", event.target.image.files[0]);
 
-        axios.post('http://192.168.0.180:8000/add_products', formData)
+        axios.post(`${'http://192.168.0.210:8000'}/add_products`, formData)
             .then(response => {
-                setLoading(false); // Hide spinner
+                setLoading(false); // Hide spinner${apibaseurl}
 
                 if (response.data.status === false) {
                     // alert(response.data.message);
@@ -157,29 +241,21 @@ function EcommerceCurdoperationinform() {
         setprice("");
         setquantity("");
         setsize("");
+        setcolour("");
         setlastupdated("");
+
     };
 
     const handleImageUpload = (e) => {
         const file = e.target.files[0];
 
-        // Check file size
-        if (file.size > 10 * 1024 * 1024) { // 10 MB in bytes
-            setError("File size exceeds 10MB limit.");
-            return;
-        }
-
-        // Check file type
-        const allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
-        if (!allowedTypes.includes(file.type)) {
-            setError("Only PNG, JPEG, and JPG file types are allowed.");
-            return;
-        }
 
         setEditedDocument(prevState => ({
             ...prevState,
             image: file,
         }));
+
+
     };
 
     //----------------------------------------------AddDocument End//------------------------------------
@@ -190,7 +266,7 @@ function EcommerceCurdoperationinform() {
 
     const handleEditfetchdata = async (id) => {
         try {
-            const response = await axios.get(`http://192.168.0.180:8000/handleEditfetchdata/${id}`);
+            const response = await axios.get(`${'http://192.168.0.210:8000'}/handleEditfetchdata/${id}`);
             debugger;
             if (response.data.status) {
                 const selectedData = response.data.data;
@@ -208,6 +284,8 @@ function EcommerceCurdoperationinform() {
                     quantity: selectedData["quantity"],
                     status: selectedData["status"],
                     size: selectedData["size"],
+                    colour: selectedData["colour"],
+
                     // lastupdated:selectedData["lastupdated"]
                 });
                 setShowEditModal(true);
@@ -221,11 +299,32 @@ function EcommerceCurdoperationinform() {
 
 
     // Handle form input changes
-    const handleInputChange = (event) => {
-        const { name, value } = event.target;
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        let newValue = value;
+
+
+
         setEditedDocument(prevState => ({
             ...prevState,
-            [name]: value
+            [name]: newValue
+        }));
+    };
+
+    const handlePriceChange = (e) => {
+        // Get the entered value
+        let value = parseInt(e.target.value);
+
+        // Check if the entered value is less than zero
+        if (value < 0) {
+            // If less than zero, set it to zero
+            value = 0;
+        }
+
+        // Update the state with the new value
+        setEditedDocument(prevState => ({
+            ...prevState,
+            price: value
         }));
     };
 
@@ -235,20 +334,85 @@ function EcommerceCurdoperationinform() {
         console.log("editedDocument", editedDocument);
         event.preventDefault();
         setLoading(true);
+        if (editedDocument.title == null || editedDocument.title == "") {
+            toast.error('Please Enter  title');
+            // setError({ ...error, country: 'Please select a country' });
 
+            return;
+        }
 
+        // if (editedDocument.image==null ||editedDocument.image=="") {
+        //     toast.error('Please Select  image');
+        //     // setError({ ...error, country: 'Please select a country' });
 
-        // Validate form fields
-        if (!editedDocument.Id || !editedDocument.Title || !editedDocument.category || !editedDocument.product || !editedDocument.quantity || !editedDocument.price || !editedDocument.status || !editedDocument.size) {
-            setLoading(false);
-            showAlert("Please fill in all the fields", "danger");
+        //     return;
+        // }
+        if (editedDocument.description == null || editedDocument.description == "") {
+            toast.error('Please Enter  description');
+            // setError({ ...error, country: 'Please select a country' });
+
+            return;
+        }
+
+        if (editedDocument.product == null || editedDocument.product == "") {
+            toast.error('Please Select  product');
+            // setError({ ...error, country: 'Please select a country' });
+
+            return;
+        }
+        if (editedDocument.category == null || editedDocument.category == "") {
+            toast.error('Please Select  category');
+            // setError({ ...error, country: 'Please select a country' });
+
             return;
         }
 
 
+        if (editedDocument.price == null || editedDocument.price == "") {
+            toast.error('Please Enter  price');
+            // setError({ ...error, country: 'Please select a country' });
+
+            return;
+        }
+        if (editedDocument.quantity == null || editedDocument.quantity == "") {
+            toast.error('Please Select  quantity');
+            // setError({ ...error, country: 'Please select a country' });
+
+            return;
+        }
+
+
+
+        if (editedDocument.status == null || editedDocument.status == "") {
+            toast.error('Please Select status');
+            // setError({ ...error, country: 'Please select a country' });
+
+            return;
+        }
+
+        if (editedDocument.size == null || editedDocument.size == "") {
+            toast.error('Please Select  size');
+            // setError({ ...error, country: 'Please select a country' });
+
+            return;
+        }
+        if (editedDocument.colour == null || editedDocument.colour == "") {
+            toast.error('Please Enter colour');
+            // setError({ ...error, country: 'Please select a country' });
+
+            return;
+        }
+
+
+
+
+
+
+
+
         const payload = {
             Id: editedDocument.Id,
-            Title: editedDocument.Title,
+            title: editedDocument.title,
             image: editedDocument.image,
             description: editedDocument.description,
             product: editedDocument.product,
@@ -257,22 +421,30 @@ function EcommerceCurdoperationinform() {
             quantity: editedDocument.quantity,
             status: editedDocument.status,
             size: editedDocument.size,
+            colour: editedDocument.colour,
+
             lastupdated: editedDocument.lastupdated,
+
+
 
         };
 
+        // const formData = new FormData();
+        // formData.append("data", JSON.stringify(payload));
+
         const formData = new FormData();
         formData.append("data", JSON.stringify(payload));
+        formData.append("image", editedDocument.image); // Add this line to include the new image data
 
         try {
-            const response = await axios.post('http://192.168.0.180:8000/edit_products', formData);
+            const response = await axios.post(`${'http://192.168.0.210:8000'}/edit_products`, formData);
             if (response.data.status) {
                 setShowEditModal(false);
                 showAlert(response.data.message, "success");
                 // Clear the editedDocument state after successful submission
                 setEditedDocument({
                     Id: '',
-                    Title: '',
+                    title: '',
                     image: '',
                     description: '',
                     product: '',
@@ -281,7 +453,8 @@ function EcommerceCurdoperationinform() {
                     quantity: '',
                     status: '',
                     size: '',
-                    lastupdated:''
+                    colour: '',
+                    lastupdated: ''
                 });
 
                 fetchData();
@@ -310,7 +483,7 @@ function EcommerceCurdoperationinform() {
     //a function to open the view modal and fetch the data for the selected document:
     const handleViewDocument = async (id) => {
         try {
-            const response = await axios.get(`http://192.168.0.180:8000/ViewsinglefetchData/${id}`);
+            const response = await axios.get(`${'http://192.168.0.210:8000'}/ViewsinglefetchData/${id}`);
             if (response.data.status) {
                 setViewDocument(response.data.data);
                 setShowViewModal(true);
@@ -340,6 +513,7 @@ function EcommerceCurdoperationinform() {
         setquantity('');
         setstatus('');
         setsize('');
+        setcolour('');
     };
 
 
@@ -352,7 +526,7 @@ function EcommerceCurdoperationinform() {
         if (window.confirm("Are you sure you want to delete all records?")) {
             try {
                 // Delete records from the backend
-                const response = await axios.delete('http://192.168.0.180:8000/delete_all_products/');
+                const response = await axios.delete(`${'http://192.168.0.210:8000'}/delete_all_products/`);
 
                 if (response.status) {
                     console.log('All records deleted successfully:');
@@ -374,8 +548,12 @@ function EcommerceCurdoperationinform() {
             const newData = [...data];
             newData.splice(rowIndex, 1);
             setData(newData);
+
+
         }
+
     };
+
     //----------------------------------------------DeleteAllRecords Start//------------------------------------
 
     const [searchQuery, setSearchQuery] = useState('');
@@ -386,7 +564,7 @@ function EcommerceCurdoperationinform() {
         console.log('handleSearch called with query:', trimmedQuery);
 
         try {
-            const response = await axios.get('http://192.168.0.180:8000/search_document', {
+            const response = await axios.get(`${'http://192.168.0.210:8000'}/search_document`, {
                 params: {
                     Title: trimmedQuery,
                     description: trimmedQuery,
@@ -444,15 +622,17 @@ function EcommerceCurdoperationinform() {
             status: editedDocument.status,
             created_at: editedDocument.created_at,
             updated_at: editedDocument.updated_at,
-            size: editedDocument.size
+            size: editedDocument.size,
+            colour: editedDocument.colour,
 
         };
 
         const formData = new FormData();
         formData.append("data", JSON.stringify(payload));
 
+
         try {
-            const response = await axios.delete(`http://192.168.0.180:8000/delete-document/${deleteId}`, formData);
+            const response = await axios.delete(`${'http://192.168.0.210:8000'}/delete-document/${deleteId}`, formData);
 
             if (response.data.status) {
                 // Remove the deleted record from the documents state
@@ -479,12 +659,13 @@ function EcommerceCurdoperationinform() {
         <>
 
             <Navbar className='mb-4' title="TextUtils" mode={mode} toggleMode={toggleMode} />
+
             <div style={{ marginTop: '45px' }}>
                 <div style={{ marginTop: '7%', marginBottom: '1%', right: '5%' }}>
                     <Button variant="info" style={{ marginLeft: '1%' }} onClick={handleAddNew}>ADD NEW</Button>
-                    {documents.length > 0 && (
-                        <Button variant="danger" style={{ marginLeft: '1%' }} onClick={handleDeleteAll} disabled={documents.length <= 5}>Delete All Records</Button>
-                    )}
+
+                    <Button variant="danger" style={{ marginLeft: '1%' }} onClick={handleDeleteAll} disabled={documents.length <= 5}>Delete All Records</Button>
+
                     {/* Search Input Field */}
                     <input
                         type="text"
@@ -495,7 +676,7 @@ function EcommerceCurdoperationinform() {
                     />
                     {searchQuery && (
                         <FaTimes
-                            style={{ position: 'absolute', top: '19%', right: '168px', transform: 'translateY(-50%)', cursor: 'pointer' }}
+                            style={{ position: 'absolute', top: '19%', right: '157px', transform: 'translateY(-50%)', cursor: 'pointer' }}
                             onClick={() => {
                                 setSearchQuery('');  // Reset the search query
                             }}
@@ -511,47 +692,49 @@ function EcommerceCurdoperationinform() {
             </div>
 
 
-            <Table style={{ backgroundColor: "white" }}>
+            <Table style={{ backgroundcolour: "white" }}>
                 <thead style={{ textAlign: 'center' }}>
                     <th>SR No</th>
-                    <th >Title</th>
-                    <th >image</th>
+                    <th>Title</th>
+                    <th>image</th>
                     <th>Description</th>
                     <th>Product</th>
                     <th>category</th>
-                    <th >price</th>
+                    <th>price</th>
                     <th>quantity</th>
                     <th>size</th>
+                    <th>colour</th>
                     <th>status</th>
-                    
-                    {/* <th>lastupdated</th> */}
-                    <th >Edit</th>
-                    <th >View</th>
-                    <th >Delete</th>
+                    <th>Edit</th>
+                    <th>View</th>
+                    <th>Delete</th>
                 </thead>
                 <tbody style={{ textAlign: 'center' }}>
                     {documents.length === 0 ? (
-                        <tr >
-                            <td colSpan={titles.length} style={{ color: 'red' }}>No record found</td>
+                        <tr>
+                            <td colSpan={titles.length} style={{ colour: 'red' }}>No record found</td>
                         </tr>
                     ) : (
                         documents.map((document, index) => (
                             <tr key={document.Id}>
                                 <td>{index + 1}</td>
                                 <td>{document.title}</td>
-                                <td>{document.image}</td>
+                                <td>{document.image && (
+                                    <img style={{ height: '46px' }}
+                                        src={`${baseurl}/${document.image}`}
+                                        alt="Document Image"
+                                    />
+                                )}</td>
                                 <td>{document.description}</td>
                                 <td>{document.product}</td>
                                 <td>{document.category}</td>
                                 <td>{document.price}</td>
                                 <td>{document.quantity}</td>
                                 <td>{document.size}</td>
-                                <td>{document.status}</td>
-                                {/* <td>{document.lastupdated}</td> */}
-
-                                {/* <td><Button variant="warning" onClick={() => handleEditfetchdata(document.Id)}>Edit</Button></td> */}
+                                <td>{document.colour}</td>
+                                <td style={{ colour: document.status === 'Active' ? 'green' : document.status === 'Inactive' ? 'red' : 'inherit' }}>{document.status}</td>
                                 <td>
-                                    <Button variant="warning" onClick={() => handleEditfetchdata(document.Id)}>
+                                    <Button variant="warning" onClick={() => handleEditfetchdata(document.Id)} >
                                         Edit
                                     </Button>
                                 </td>
@@ -573,6 +756,7 @@ function EcommerceCurdoperationinform() {
 
 
 
+
             <Modal show={showAddModal} onHide={handleCloseModal} size='sm' scrollable>
                 <Modal.Header closeButton>
                     <Modal.Title>Add New Record</Modal.Title>
@@ -586,8 +770,6 @@ function EcommerceCurdoperationinform() {
                                 placeholder="Enter title"
                                 name="title"
                                 value={title}
-                                required
-                                maxLength={25}
                                 onChange={(e) => setTitle(e.target.value)}
                             />
                         </div>
@@ -600,7 +782,7 @@ function EcommerceCurdoperationinform() {
                                 style={{ width: '99%' }}
 
                             />
-                            {error.handleImageUpload && <div className='error'>{error.handleImageUpload}</div>}
+                            {/* {error.handleImageUpload && <div className='error'>{error.handleImageUpload}</div>} */}
 
                         </div>
 
@@ -612,8 +794,6 @@ function EcommerceCurdoperationinform() {
                                 placeholder="Enter description"
                                 name="description"
                                 value={description}
-                                required
-                                maxLength={10}
                                 onChange={(e) => setdescription(e.target.value)}
                             />
                         </div>
@@ -628,7 +808,13 @@ function EcommerceCurdoperationinform() {
                                 <option value="">Select Product</option>
                                 <option value="Clothes">Clothes</option>
                                 <option value="Footwear">Footwear</option>
+                                <option value="Headphones">Headphones</option>
                                 <option value="Watches">Watches</option>
+                                {/* <option value="Watches">Watches</option>
+                                <option value="Watches">Watches</option>
+                                <option value="Watches">Watches</option>
+                                <option value="Watches">Watches</option>
+                                <option value="Watches">Watches</option> */}
                                 {/* Add more options as needed */}
                             </select>
                         </div>
@@ -639,7 +825,6 @@ function EcommerceCurdoperationinform() {
                                 name="category"
                                 value={category}
                                 onChange={(e) => setcategory(e.target.value)}
-                                required
                                 style={{ width: '99%' }}
 
                             >
@@ -648,6 +833,9 @@ function EcommerceCurdoperationinform() {
                                 <option value="Men">Men</option>
                                 <option value="Women">Women</option>
                                 <option value="All">All</option>
+                                <option value="Electronics">Electronics</option>
+
+
                                 {/* Add more options as needed */}
                             </select>
                         </div>
@@ -662,11 +850,15 @@ function EcommerceCurdoperationinform() {
                                 name="price"
                                 value={price}
                                 style={{ width: '99%' }}
-                                required
-                                maxLength={10}
-                                onChange={(e) => setprice(e.target.value)}
+                                onChange={(e) => {
+                                    const inputPrice = parseFloat(e.target.value);
+                                    if (inputPrice > 0 || e.target.value === '') {
+                                        setprice(inputPrice);
+                                    }
+                                }}
                             />
                         </div>
+
 
 
 
@@ -675,9 +867,7 @@ function EcommerceCurdoperationinform() {
                                 name="number"
                                 value={quantity}
                                 onChange={(e) => setquantity(e.target.value)}
-                                required
                                 style={{ width: '99%' }}
-
                             >
                                 <option value="">Select Quantity</option>
                                 <option value="1"> 1</option>
@@ -690,7 +880,6 @@ function EcommerceCurdoperationinform() {
                                 <option value="8"> 8</option>
                                 <option value="9"> 9</option>
                                 <option value="10"> 10</option>
-
                                 {/* Add more options as needed */}
                             </select>
                         </div>
@@ -700,9 +889,7 @@ function EcommerceCurdoperationinform() {
                                 name="status"
                                 value={status}
                                 onChange={(e) => setstatus(e.target.value)}
-                                required
                                 style={{ width: '99%' }}
-
                             >
                                 <option value="">Select Status</option>
                                 <option value="Active">Active</option>
@@ -716,9 +903,7 @@ function EcommerceCurdoperationinform() {
                                 name="size"
                                 value={size}
                                 onChange={(e) => setsize(e.target.value)}
-                                required
                                 style={{ width: '99%' }}
-
                             >
                                 <option value="">Select Size</option>
                                 <option value="S">S</option>
@@ -728,12 +913,35 @@ function EcommerceCurdoperationinform() {
                                 <option value="XXL">XXL</option>
                                 {/* Add more options as needed */}
                             </select>
+
+                        </div>  
+
+
+
+                        <div className="form-group">
+                            <select
+                                 type="text"
+                                 placeholder="Select Colour"
+                                 name="colour"
+                                 value={colour}
+                                 onChange={(e) => setcolour(e.target.value)}
+                                 style={{ width: '99%' }}
+
+                            >
+                                <option value="">Select Colour</option>
+                                <option value="Red">Red</option>
+                                <option value="Blue">Blue</option>
+                                <option value="Green">Green</option>
+                                
+                                {/* Add more options as needed */}
+                            </select>
                         </div>
                         <Button type="submit" variant="primary" style={{ marginLeft: '34%' }}>Submit</Button>
                     </form>
                 </Modal.Body>
             </Modal>
 
+            <ToastContainer />
 
 
             <Modal show={showEditModal} onHide={handleCloseModal} size='sm' scrollable>
@@ -743,41 +951,43 @@ function EcommerceCurdoperationinform() {
                 <Modal.Body style={{ maxHeight: 'calc(110vh - 200px)', overflowY: 'auto' }}>
                     <form onSubmit={handleEditSubmit}>
                         <div className="form-group">
+                            <label>Title:</label>
+
+                        </div>
+                        <div className="form-group">
                             <input
                                 type="text"
                                 placeholder="Enter title"
-                                name="Title"
+                                name="title"
                                 value={editedDocument?.title || ''}
                                 onChange={handleInputChange}
-                                required
-                                maxLength={25}
                             />
                         </div>
+                        <div className="form-group">
+                            <label>Previous Image:</label>
+                            <span>{editedDocument?.image ? editedDocument.image.name : "No previous image"}</span>
+                        </div>
 
+
+
+                        {/* Upload new image */}
+                        {/* Input for uploading new image */}
                         <div className="form-group">
                             <input
                                 type="file"
                                 name="image"
                                 accept="image/*"
-                                value={editedDocument?.image || ''}
-                                // onChange={(e) => handleImageUpload(e)}
-                                required
+                                onChange={(e) => handleImageUpload(e)}
                                 style={{ width: '99%' }}
-
-                                maxLength={25}
-
                             />
                         </div>
-
                         <div className="form-group">
                             <input
                                 type="text"
-                                placeholder="Enter title"
-                                name="Title"
-                                value={editedDocument?.title || ''}
+                                placeholder="Enter description"
+                                name="description"
+                                value={editedDocument?.description || ''}
                                 onChange={handleInputChange}
-                                required
-                                maxLength={25}
                             />
                         </div>
 
@@ -786,6 +996,7 @@ function EcommerceCurdoperationinform() {
                             <select
                                 name="product"
                                 value={editedDocument?.product || ''}
+                                onChange={handleInputChange}
                                 style={{ width: '99%' }}
                             >
                                 <option value="">Select Product</option>
@@ -800,23 +1011,22 @@ function EcommerceCurdoperationinform() {
 
                         <div className="form-group">
                             <input
-                                type="text"
+                                type="number"
                                 placeholder="Enter price"
                                 name="price"
-                                value={editedDocument?.price || ''}
-                                onChange={handleInputChange}
-                                required
+                                value={editedDocument.price}
                                 style={{ width: '99%' }}
-                                maxLength={25}
+                                onChange={handlePriceChange}
                             />
                         </div>
 
 
                         <div className="form-group">
                             <select
-                                name="number"
+                                name="quantity"
                                 value={editedDocument?.quantity || ''}
-                                required
+                                onChange={handleInputChange}
+
                                 style={{ width: '99%' }}
                             >
                                 <option value="">Select Quantity</option>
@@ -831,13 +1041,13 @@ function EcommerceCurdoperationinform() {
 
                         <div className="form-group">
                             <select
-                                type="text"
-                                placeholder="Select status"
                                 name="status"
                                 value={editedDocument?.status || ''}
                                 onChange={handleInputChange}
-                                required
-                                style={{ width: '99%' }}
+                                style={{
+                                    width: '99%',
+                                    colour: editedDocument?.status === 'Active' ? 'green' : editedDocument?.status === 'Inactive' ? 'red' : 'black'
+                                }}
                             >
                                 <option value="">Select Status</option>
                                 <option value="Active">Active</option>
@@ -847,7 +1057,6 @@ function EcommerceCurdoperationinform() {
 
                         <div className="form-group">
                             <select
-                                placeholder="Select size"
                                 name="size"
                                 value={editedDocument?.size || ''}
                                 onChange={handleInputChange}
@@ -860,6 +1069,28 @@ function EcommerceCurdoperationinform() {
                                 <option value="XL">XL</option>
                                 <option value="XXL">XXL</option>
                             </select>
+
+                           
+
+
+                            <div className="form-group">
+                            <select
+                                 type="text"
+                                 placeholder="Select Colour"
+                                 name="colour"
+                                 value={editedDocument?.colour || ''}
+                                 onChange={handleInputChange}
+                                style={{ width: '99%' }}
+                            >
+                                <option value="">Select Colour</option>
+                                <option value="Red">Red </option>
+                                <option value="Blue">Blue</option>
+                                <option value="Green">Green</option>
+                            </select>
+                        </div>
+
+
+
                         </div>
 
                         <Button type="submit" variant="primary" style={{ marginLeft: '34%' }}>Submit</Button>
@@ -873,22 +1104,29 @@ function EcommerceCurdoperationinform() {
                     <Modal.Title>View Document</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <p><strong>title:</strong> {viewDocument.title}</p>
-                    <p><strong>Image:</strong></p>
-                    {viewDocument.image && (
-                        <img src={viewDocument.image} alt="Document Image" style={{ maxWidth: '100%', maxHeight: '400px' }} />
-                    )}
-                    <p><strong>Description:</strong> {viewDocument.description}</p>
-                    <p><strong>Product:</strong> {viewDocument.product}</p>
-                    <p><strong>Category:</strong> {viewDocument.category}</p>
-                    <p><strong>Price:</strong> {viewDocument.price}</p>
-                    <p><strong>Quantity:</strong> {viewDocument.quantity}</p>
-                    <p><strong>Status:</strong> {viewDocument.status}</p>
-                    <p><strong>Size:</strong> {viewDocument.size}</p>
-                    <p><strong>lastupdated:</strong> {viewDocument.lastupdated}</p>
-
+                    <DocumentProperty label="Title" value={viewDocument.title} />
+                    <DocumentProperty label="Image">
+                        {viewDocument.image && (
+                            <img
+                                src={`${baseurl}/${viewDocument.image}`}
+                                alt="Document Image"
+                                style={{ maxWidth: '100%', maxHeight: '400px' }}
+                            />
+                        )}
+                    </DocumentProperty>
+                    <DocumentProperty label="Description" value={viewDocument.description} />
+                    <DocumentProperty label="Product" value={viewDocument.product} />
+                    <DocumentProperty label="Category" value={viewDocument.category} />
+                    <DocumentProperty label="Price" value={viewDocument.price} />
+                    <DocumentProperty label="Quantity" value={viewDocument.quantity} />
+                    <DocumentProperty label="Status" value={viewDocument.status} />
+                    <DocumentProperty label="Size" value={viewDocument.size} />
+                    <DocumentProperty label="colour" value={viewDocument.colour} />
+                    <DocumentProperty label="Last Updated" value={viewDocument.lastupdated} />
                 </Modal.Body>
             </Modal>
+
+
 
 
 

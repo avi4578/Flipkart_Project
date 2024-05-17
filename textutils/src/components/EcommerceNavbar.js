@@ -1,8 +1,5 @@
 import React, { useState } from 'react';
 import '../EcommerceNavbar.css'; // Import the CSS file
-import logo from '../components/Assets/logo.png'
-import cart_icon from '../components/Assets/cart_icon.png'
-import ExampleCarouselImage from 'react-bootstrap/Carousel';
 import { Container, Row, Col, Card, Button } from 'react-bootstrap'; // Import react-bootstrap components
 import { CardImg, CardBody, CardTitle, CardText, CardFooter } from 'reactstrap';
 import { Carousel } from 'react-bootstrap';
@@ -10,7 +7,6 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { MDBBtn, MDBIcon, MDBInput, MDBFooter, MDBContainer, MDBRow, MDBCol } from 'mdb-react-ui-kit';
 import { TypeAnimation } from 'react-type-animation'; // Import TypeAnimation component as a named import
-import ReactTypeAnimation from 'react-type-animation';
 
 
 
@@ -50,7 +46,7 @@ function EcommerceNavbar() {
 
     return (
         <>
-            <div className='navbar'>
+            {/* <div className='navbar'>
                 <div className="nav-logo">
                     <img src={logo} alt="" />
                     <p>Shopper</p>
@@ -66,7 +62,22 @@ function EcommerceNavbar() {
                     <img src={cart_icon} alt='' />
                     <div className="nav-cart-count"></div>
                 </div>
-            </div>
+                
+            </div> */}
+            <nav >
+                <input type="checkbox" id="check" />
+                <label htmlFor="check" className="checkbtn">
+                    <i className="fas fa-bars"></i>
+                </label>
+                <label className="logo">DesignX</label>
+                <ul style={{zindex: 1}}>
+                    <li><a className="active" href="#">Home</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Services</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="#">Feedback</a></li>
+                </ul>
+            </nav>
             <Carousel interval={1500}>
                 <Carousel.Item>
                     <ExampleCarouselImage src="image/Fashion.jpg" text="Second slide" height={550} />
@@ -107,8 +118,8 @@ function EcommerceNavbar() {
             </Carousel>
 
 
- {/* Add the title "Men Collection" with dynamic text color */}
- <h1 className="text-center mt-4 mb-4" style={{ color: textColor }}>
+            {/* Add the title "Men Collection" with dynamic text color */}
+            <h1 className="text-center mt-4 mb-4" style={{ color: textColor }}>
                 <TypeAnimation
                     sequence={[
                         'Men Collection',
@@ -296,7 +307,7 @@ function EcommerceNavbar() {
                     </section>
 
                     <section className='mb-4'>
-                        <p>
+                        <p >
                             Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt distinctio earum repellat quaerat
                             voluptatibus placeat nam, commodi optio pariatur est quia magnam eum harum corrupti dicta, aliquam
                             sequi voluptate quas.

@@ -32,12 +32,12 @@ export default function Navbar(props) {
                             <a href='/Curdoperationinform' style={{ color: "white", textDecoration: 'none' }}>Curdoperationinform</a>
                         </li> */}
                        
-                        <li style={{ paddingLeft: "8px" ,paddingRight: "20px"}}>
+                        {/* <li style={{ paddingLeft: "8px" ,paddingRight: "20px"}}>
                             <a href='/ProductDetail' style={{ color: "white", textDecoration: 'none' }}>ProductDetail</a>
-                        </li>
+                        </li> */}
 
                         <li style={{ paddingLeft: "8px" ,paddingRight: "20px"}}>
-                            <a href='/EcommerceNavbar' style={{ color: "white", textDecoration: 'none' }}>EcommerceNavbar</a>
+                            <a href='/EcommerceWebsite' style={{ color: "white", textDecoration: 'none' }}>EcommerceWebsite</a>
                         </li>
                         <li style={{ paddingLeft: "8px" ,paddingRight: "20px"}}>
                             <a href='/EcommerceCurdoperationinform' style={{ color: "white", textDecoration: 'none' }}>EcommerceCrudoperationinform</a>

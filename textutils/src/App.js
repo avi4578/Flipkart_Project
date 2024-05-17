@@ -16,6 +16,15 @@ import ProductDetail from "./components/ProductDetail ";
 import EcommerceNavbar from "./components/EcommerceNavbar";
 import EcommerceCurdoperationinform from './components/EcommerceCurdoperationinform';
 import NetworkStatus from "./components/NetworkStatus";
+import EComNavbar from "./components/EComNavbar";
+import EComCarousel from "./components/EComCarousel";
+import EcomCards from "./components/EcomCards";
+import EcomFooter from "./components/EcomFooter";
+import EcommerceWebsite from "./components/EcommerceWebsite";
+import Shoppingcarts from "./components/Shoppingcarts";
+
+
+
 function Alert({ message, type }) {
   return (
     <div 
@@ -91,7 +100,14 @@ function App() {
         <Route path="/ProductDetail" element={<ProductDetail />} />
         <Route path="/EcommerceNavbar" element={<EcommerceNavbar />} />
         <Route path="/EcommerceCurdoperationinform" element={<EcommerceCurdoperationinform />} />
+        <Route path="/EComCarousel" element={<EComCarousel />} />
+        <Route path="/EComNavbar" element={<EComNavbar />} />
+        <Route path="/EcomCards" element={<EcomCards />} />
+        <Route path="/EcomFooter" element={<EcomFooter />} />
         <Route path="/NetworkStatus" element={<NetworkStatus />} />
+        <Route path="/ProductDetail/:id" element={<ProductDetail />} />
+        <Route path="/EcommerceWebsite" element={<EcommerceWebsite />} />
+        <Route path="/Shoppingcarts" element={<Shoppingcarts />} />
         
       </Routes>
 

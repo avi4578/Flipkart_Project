@@ -1,41 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import { useLocation } from 'react-router-dom';
+import { Row, Col, Form, Button } from 'react-bootstrap';
+import EcommerceNavbar from './EComNavbar';
 
 const ProductDetail = () => {
-  const { productId } = useParams();
-  const [product, setProduct] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [qty, setQty] = useState(1);
-  const [color, setColor] = useState('');
+  const [colour, setColour] = useState('');
   const [size, setSize] = useState('');
-  const [title,settitle]=useState('');
+  const baseurl = "http://192.168.0.210:8000/media/documents/doc/";
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  const [price, setPrice] = useState('');
+  const location = useLocation();
+  const { data } = location.state;
 
   useEffect(() => {
-    const fetchProduct = async (id) => {
-      try {
-        const response = await axios.get(`http://192.168.0.180:8000/get_product_with_id/1`);
-        if (response.data.status) {
-        } else {
-            console.error(response.data.message || 'Failed to fetch data');
-        }
-    } catch (error) {
-        console.error('Error fetching document:', error.response ? error.response.data : error.message);
+    if (location.state && location.state.productData) {
+      const { name, description, price, colour, size } = location.state.productData;
+      setName(name);
+      setDescription(description);
+      setPrice(price);
+      setColour(colour);
+      setSize(size);
     }
-    };
-
-    fetchProduct();
-  }, [productId]);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (!product) {
-    return <div>Product not found</div>;
-  }
-
-  const { name, description, price, images } = product;
+  }, [location.state]);
 
   const handleAddToCart = () => {
     // Implement add to cart functionality here
@@ -50,50 +38,87 @@ const ProductDetail = () => {
   };
 
   const handleColorChange = (e) => {
-    setColor(e.target.value);
+    setColour(e.target.value);
   };
 
   const handleSizeChange = (e) => {
     setSize(e.target.value);
   };
 
+  const renderQuantityOptions = () => {
+    const options = [];
+    for (let i = 1; i <= 10; i++) {
+      options.push(<option key={i} value={i}>{i}</option>);
+    }
+    return options;
+  };
+
   return (
-    <div className="product-detail">
-      {/* Check if images array exists and has at least one element */}
-      {images && images.length > 0 && (
-        <img src={images[0]} alt="Product" style={{ maxWidth: '100%', height: 'auto' }} />
-      )}
+    <>
+      <EcommerceNavbar />
+      <div className='container'>
+        <Row style={{ marginTop: '155px' }}>
+          <Col md={4}>
+            <div className='product-image'>
+              <img
+                src={`${baseurl}/${data.image}`}
+                alt="largeImg"
+                className='large-img'
+                style={{ maxWidth: '100%', maxHeight: '340px' }}
+              />
+            </div>
+          </Col>
 
-      <div className="product-details">
-        <h2>{name}</h2>
-        <p>title: {title}</p>
-        <p>Price: ${price}</p>
+          <Col md={8}>
+            <div className='product-details' style={{ fontSize: '19px' }}>
+              <h2 className='title' style={{ fontSize: '25px' }}>
+                {data.title}</h2>
+              <label><b>Description:</b></label>
+              <p>{data.description}</p>
+              <p style={{ color: 'Red' }}><b>Price:</b>: ${data.price}</p>
 
-        <label htmlFor="qty">Quantity:</label>
-        <input type="number" id="qty" value={qty} onChange={handleQtyChange} style={{ marginBottom: '10px' }} />
+              {/* <Form.Group controlId="qty">
+                <Form.Label>Quantity:</Form.Label>
+                <Form.Control as="select" value={qty} onChange={handleQtyChange}>
+                  {renderQuantityOptions()}
+                </Form.Control>
+              </Form.Group> */}
 
-        <label htmlFor="color">Color:</label>
-        <select id="color" value={color} onChange={handleColorChange} style={{ marginBottom: '10px' }}>
-          <option value="">Select Color</option>
-          <option value="red">Red</option>
-          <option value="blue">Blue</option>
-          <option value="green">Green</option>
-        </select>
+              <Form.Group controlId="colour">
+                <Form.Label>colour:</Form.Label>
+                <Form.Control as="select" value={data.colour} onChange={handleColorChange}>
+                  <option value="">Select Colour</option>
+                  <option value="Red">Red</option>
+                  <option value="Blue">Blue</option>
+                  <option value="Green">Green</option>
+                </Form.Control>
+              </Form.Group>
 
-        <label htmlFor="size">Size:</label>
-        <select id="size" value={size} onChange={handleSizeChange} style={{ marginBottom: '10px' }}>
-          <option value="">Select Size</option>
-          <option value="XS">XS</option>
-          <option value="S">S</option>
-          <option value="M">M</option>
-          <option value="L">L</option>
-          <option value="XL">XL</option>
-        </select>
+              <Form.Group controlId="size">
+                <Form.Label>Size:</Form.Label>
+                <Form.Control as="select" value={data.size} onChange={handleSizeChange}>
+                  <option value="">Select Size</option>
+                  <option value="XS">XS</option>
+                  <option value="S">S</option>
+                  <option value="M">M</option>
+                  <option value="L">L</option>
+                  <option value="XL">XL</option>
+                </Form.Control>
+              </Form.Group>
 
-        <button onClick={handleAddToCart} style={{ marginRight: '10px' }}>Add to Cart</button>
-        <button onClick={handleAddToWishlist}>Add to Wishlist</button>
+              <div className='product-buttons'>
+                <Button variant='success' onClick={handleAddToCart} style={{ fontSize: '26px', marginRight: '10px', border: '2px solid black' }}>
+                  Add to Cart
+                </Button>
+                <Button variant='primary' onClick={handleAddToWishlist} style={{ fontSize: '26px', border: '2px solid black' }}>
+                  Add to Wishlist
+                </Button>
+              </div>
+            </div>
+          </Col>
+        </Row>
       </div>
-    </div>
+    </>
   );
 };
 
